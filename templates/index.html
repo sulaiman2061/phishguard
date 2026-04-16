@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PhishGuard Enterprise</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#050a0f;--bg2:#0a1520;--panel:#0f2235;--border:#1a3a55;--teal:#00d4ff;--teal-glow:rgba(0,212,255,0.15);--red:#ff4060;--red-glow:rgba(255,64,96,0.15);--yellow:#ffb800;--yellow-glow:rgba(255,184,0,0.15);--green:#00e676;--green-glow:rgba(0,230,118,0.15);--text:#c8dae8;--text-dim:#5a7a94;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:60px 60px;opacity:.15;pointer-events:none;z-index:0;}
+header{position:relative;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:0 32px;height:65px;background:rgba(10,21,32,.95);border-bottom:1px solid var(--border);}
+.logo{display:flex;align-items:center;gap:12px;}
+.logo-icon{width:36px;height:36px;border:2px solid var(--teal);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:1rem;animation:glow 3s ease-in-out infinite;}
+@keyframes glow{0%,100%{box-shadow:0 0 8px var(--teal-glow);}50%{box-shadow:0 0 20px rgba(0,212,255,.35);}}
+.logo h1{font-family:'Rajdhani',sans-serif;font-size:1.25rem;letter-spacing:3px;color:#fff;}
+.logo h1 span{color:var(--teal);}
+.logo p{font-family:'Share Tech Mono',monospace;font-size:.56rem;color:var(--text-dim);letter-spacing:1.5px;}
+nav{display:flex;align-items:center;gap:8px;}
+nav a{font-family:'Share Tech Mono',monospace;font-size:.7rem;color:var(--text-dim);text-decoration:none;padding:6px 12px;border-radius:6px;border:1px solid transparent;transition:all .2s;}
+nav a:hover,nav a.active{border-color:var(--teal);color:var(--teal);background:var(--teal-glow);}
+.status{display:flex;align-items:center;gap:6px;font-family:'Share Tech Mono',monospace;font-size:.68rem;color:var(--green);}
+.status::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);animation:blink 2s infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.3;}}
+main{position:relative;z-index:5;max-width:900px;margin:0 auto;padding:36px 24px 60px;}
+.title{text-align:center;margin-bottom:30px;}
+.eye{font-family:'Share Tech Mono',monospace;font-size:.68rem;color:var(--teal);letter-spacing:3px;margin-bottom:10px;}
+.title h2{font-family:'Rajdhani',sans-serif;font-size:2.2rem;font-weight:700;color:#fff;line-height:1.1;}
+.title h2 em{font-style:normal;color:var(--teal);}
+.title p{margin-top:8px;font-size:.87rem;color:var(--text-dim);}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px;}
+.stat{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px;display:flex;align-items:center;gap:11px;}
+.stat .ico{font-size:1.3rem;}
+.stat .val{font-family:'Rajdhani',sans-serif;font-size:1.2rem;font-weight:700;color:var(--teal);}
+.stat .lbl{font-size:.65rem;color:var(--text-dim);}
+.chips-lbl{font-family:'Share Tech Mono',monospace;font-size:.66rem;color:var(--text-dim);letter-spacing:2px;margin-bottom:8px;}
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:20px;}
+.chip{font-family:'Share Tech Mono',monospace;font-size:.7rem;padding:6px 12px;border-radius:6px;border:1px solid var(--border);background:var(--bg2);color:var(--text-dim);cursor:pointer;transition:all .2s;}
+.chip.d:hover{border-color:var(--red);color:var(--red);background:var(--red-glow);}
+.chip.w:hover{border-color:var(--yellow);color:var(--yellow);background:var(--yellow-glow);}
+.chip.s:hover{border-color:var(--green);color:var(--green);background:var(--green-glow);}
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:20px;transition:border-color .3s;}
+.panel:focus-within{border-color:var(--teal);box-shadow:0 0 0 1px rgba(0,212,255,.08);}
+.phead{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;border-bottom:1px solid var(--border);background:rgba(0,0,0,.2);}
+.dots{display:flex;gap:5px;}
+.dots span{width:9px;height:9px;border-radius:50%;}
+.dots span:nth-child(1){background:#ff5f57;}
+.dots span:nth-child(2){background:#febc2e;}
+.dots span:nth-child(3){background:#28c840;}
+.ptitle{font-family:'Share Tech Mono',monospace;font-size:.68rem;color:var(--text-dim);}
+.counter{font-family:'Share Tech Mono',monospace;font-size:.63rem;color:var(--text-dim);}
+textarea{width:100%;min-height:140px;padding:18px;background:transparent;border:none;outline:none;font-family:'Share Tech Mono',monospace;font-size:.84rem;color:var(--text);resize:vertical;line-height:1.7;}
+textarea::placeholder{color:var(--text-dim);opacity:.55;}
+.pfoot{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;border-top:1px solid var(--border);background:rgba(0,0,0,.15);}
+.hint{font-family:'Share Tech Mono',monospace;font-size:.62rem;color:var(--text-dim);}
+.btns{display:flex;gap:9px;}
+.btn{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.9rem;letter-spacing:1px;padding:9px 22px;border-radius:7px;border:none;cursor:pointer;transition:all .2s;}
+.btn-p{background:var(--teal);color:var(--bg);}
+.btn-p:hover{background:#33ddff;transform:translateY(-1px);}
+.btn-s{background:transparent;color:var(--text-dim);border:1px solid var(--border);}
+.btn-s:hover{color:var(--text);border-color:var(--text-dim);}
+#err{display:none;padding:10px 14px;border-radius:7px;background:var(--red-glow);border:1px solid rgba(255,64,96,.3);color:var(--red);font-family:'Share Tech Mono',monospace;font-size:.76rem;margin-top:8px;}
+#loading{display:none;text-align:center;padding:30px;}
+.scan{width:100%;max-width:360px;height:2px;background:var(--border);border-radius:2px;margin:14px auto 0;overflow:hidden;}
+.scan::after{content:'';display:block;height:100%;background:linear-gradient(90deg,transparent,var(--teal),transparent);animation:scan 1.2s ease-in-out infinite;}
+@keyframes scan{0%{transform:translateX(-100%);}100%{transform:translateX(400%);}}
+.ltxt{font-family:'Share Tech Mono',monospace;font-size:.76rem;color:var(--teal);letter-spacing:2px;}
+.lsub{font-family:'Share Tech Mono',monospace;font-size:.62rem;color:var(--text-dim);margin-top:5px;}
+#result{display:none;border-radius:12px;overflow:hidden;border:1px solid var(--border);}
+.rhead{padding:20px 24px;display:flex;align-items:center;gap:16px;position:relative;overflow:hidden;}
+.rhead::before{content:'';position:absolute;inset:0;opacity:.05;background:radial-gradient(ellipse at left,currentColor 0%,transparent 60%);}
+.vicon{width:56px;height:56px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:1.6rem;border:2px solid currentColor;flex-shrink:0;}
+.vword{font-family:'Rajdhani',sans-serif;font-size:1.8rem;font-weight:700;letter-spacing:3px;}
+.vconf{font-family:'Share Tech Mono',monospace;font-size:.66rem;letter-spacing:1.5px;margin-top:5px;opacity:.7;}
+#result.ph{border-color:rgba(255,64,96,.4);}#result.ph .rhead{background:rgba(255,64,96,.07);color:var(--red);}#result.ph .vicon{background:var(--red-glow);}
+#result.su{border-color:rgba(255,184,0,.4);}#result.su .rhead{background:rgba(255,184,0,.07);color:var(--yellow);}#result.su .vicon{background:var(--yellow-glow);}
+#result.le,#result.wh{border-color:rgba(0,230,118,.4);}#result.le .rhead,#result.wh .rhead{background:rgba(0,230,118,.06);color:var(--green);}#result.le .vicon,#result.wh .vicon{background:var(--green-glow);}
+.rbody{background:var(--panel);padding:20px 24px;}
+.stitle{font-family:'Share Tech Mono',monospace;font-size:.62rem;color:var(--text-dim);letter-spacing:2px;margin-bottom:9px;}
+.expl{font-size:.88rem;color:var(--text);line-height:1.7;padding:12px 14px;background:rgba(0,0,0,.2);border-radius:7px;border-left:3px solid var(--border);margin-bottom:16px;}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
+.fi{display:flex;align-items:flex-start;gap:8px;padding:9px 11px;border-radius:7px;font-size:.78rem;font-family:'Share Tech Mono',monospace;line-height:1.5;}
+.fi.d{background:var(--red-glow);border:1px solid rgba(255,64,96,.22);color:#ff8099;}
+.fi.s{background:var(--green-glow);border:1px solid rgba(0,230,118,.18);color:#66ffb2;}
+.rfooter{display:flex;align-items:center;justify-content:space-between;padding-top:13px;border-top:1px solid var(--border);}
+.mtag{font-family:'Share Tech Mono',monospace;font-size:.63rem;color:var(--teal);background:var(--teal-glow);border:1px solid rgba(0,212,255,.18);padding:3px 10px;border-radius:20px;}
+.ts{font-family:'Share Tech Mono',monospace;font-size:.61rem;color:var(--text-dim);}
+footer{text-align:center;padding:20px;border-top:1px solid var(--border);font-family:'Share Tech Mono',monospace;font-size:.6rem;color:var(--text-dim);letter-spacing:1px;position:relative;z-index:5;}
+@media(max-width:700px){.stats{grid-template-columns:1fr 1fr;}.fgrid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo"><div class="logo-icon">&#128737;</div><div><h1>PHISH<span>GUARD</span></h1><p>ENTERPRISE SECURITY PORTAL</p></div></div>
+  <nav><a href="/" class="active">&#128269; Scanner</a><a href="/dashboard">&#128202; Dashboard</a></nav>
+  <div class="status">ONLINE</div>
+</header>
+<main>
+  <div class="title">
+    <div class="eye">// ENTERPRISE THREAT ANALYSIS ENGINE v2.0</div>
+    <h2>Detect <em>Phishing Attacks</em> — Protect Your Organization</h2>
+    <p>AI-powered analysis with Whitelist / Blacklist / Proxy integration</p>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="ico">&#128202;</div><div><div class="val" id="st1">-</div><div class="lbl">Total Scans</div></div></div>
+    <div class="stat"><div class="ico">&#128680;</div><div><div class="val" id="st2">-</div><div class="lbl">Phishing</div></div></div>
+    <div class="stat"><div class="ico">&#9989;</div><div><div class="val" id="st3">-</div><div class="lbl">Legitimate</div></div></div>
+    <div class="stat"><div class="ico">&#128274;</div><div><div class="val" id="st4">-</div><div class="lbl">Blacklisted</div></div></div>
+  </div>
+  <div class="chips-lbl">// QUICK TEST SAMPLES</div>
+  <div class="chips">
+    <button class="chip d" onclick="ex('p1')">&#9888; Phishing Email</button>
+    <button class="chip d" onclick="ex('p2')">&#9888; Fake Bank</button>
+    <button class="chip w" onclick="ex('su')">~ Suspicious URL</button>
+    <button class="chip s" onclick="ex('s1')">&#10003; Safe Email</button>
+    <button class="chip s" onclick="ex('s2')">&#10003; Safe URL</button>
+  </div>
+  <div class="panel">
+    <div class="phead">
+      <div style="display:flex;align-items:center;gap:10px;"><div class="dots"><span></span><span></span><span></span></div><span class="ptitle">INPUT_TARGET.txt</span></div>
+      <span class="counter" id="cnt">0 chars</span>
+    </div>
+    <textarea id="txt" placeholder="// Paste suspicious email, URL, or message here...&#10;// Supports Arabic and English&#10;// Example: URGENT verify your account http://192.168.1.1/login" oninput="document.getElementById('cnt').textContent=this.value.length+' chars'"></textarea>
+    <div id="err"><span id="errmsg"></span></div>
+    <div class="pfoot">
+      <span class="hint">Ctrl+Enter to analyze</span>
+      <div class="btns"><button class="btn btn-s" onclick="clearAll()">Clear</button><button class="btn btn-p" onclick="run()">&#10145; ANALYZE</button></div>
+    </div>
+  </div>
+  <div id="loading"><div class="ltxt">SCANNING THREAT PATTERNS...</div><div class="lsub">Checking whitelist · blacklist · AI engine</div><div class="scan"></div></div>
+  <div id="result">
+    <div class="rhead"><div class="vicon" id="vi"></div><div><div class="vword" id="vw"></div><div class="vconf" id="vc"></div></div></div>
+    <div class="rbody">
+      <div class="stitle">// ANALYSIS REPORT</div>
+      <div class="expl" id="expl"></div>
+      <div id="fs" style="display:none"><div class="stitle" id="ft"></div><div class="fgrid" id="fl"></div></div>
+      <div class="rfooter"><span class="mtag" id="mt"></span><span class="ts" id="ts"></span></div>
+    </div>
+  </div>
+</main>
+<footer>PHISHGUARD ENTERPRISE &middot; AI-POWERED SECURITY PORTAL &middot; v2.0</footer>
+<script>
+var EX={p1:"URGENT: Dear valued customer, your bank account suspended. Verify: http://192.168.0.1/verify enter password and credit card.",p2:"Dear User, unusual login. Account closes in 24h. Confirm: http://amaz0n-secure.xyz/verify",su:"Check this: https://bit.ly/3xK9mZq limited time!",s1:"Hi Sarah, please find attached the meeting agenda for Thursday. Best regards, John",s2:"https://www.google.com/search?q=phishing"};
+function ex(k){document.getElementById('txt').value=EX[k];document.getElementById('cnt').textContent=EX[k].length+' chars';document.getElementById('err').style.display='none';document.getElementById('result').style.display='none';}
+function loadStats(){fetch('/api/stats').then(r=>r.json()).then(d=>{document.getElementById('st1').textContent=d.total;document.getElementById('st2').textContent=d.phishing;document.getElementById('st3').textContent=d.legitimate;document.getElementById('st4').textContent=d.blacklist;}).catch(function(){});}
+async function run(){
+  var t=document.getElementById('txt').value.trim();
+  if(!t){showErr("Please enter text or URL.");return;}
+  document.getElementById('err').style.display='none';document.getElementById('result').style.display='none';document.getElementById('loading').style.display='block';
+  try{
+    var r=await fetch('/analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:t})});
+    var d=await r.json();
+    document.getElementById('loading').style.display='none';
+    if(d.error){showErr(d.error);return;}
+    show(d);loadStats();
+  }catch(e){document.getElementById('loading').style.display='none';showErr("Cannot connect to server.");}
+}
+function show(d){
+  var v=(d.verdict||'UNKNOWN').toUpperCase();
+  var cm={PHISHING:'ph',SUSPICIOUS:'su',LEGITIMATE:'le',WHITELISTED:'wh'};
+  var im={PHISHING:'&#128680;',SUSPICIOUS:'&#9888;&#65039;',LEGITIMATE:'&#9989;',WHITELISTED:'&#128274;'};
+  var el=document.getElementById('result');
+  el.className=cm[v]||'le';
+  document.getElementById('vi').innerHTML=im[v]||'?';
+  document.getElementById('vw').textContent=v;
+  document.getElementById('vc').textContent='CONFIDENCE: '+(d.confidence||'N/A').toUpperCase();
+  document.getElementById('expl').textContent=d.explanation||'';
+  document.getElementById('mt').textContent='> '+(d.method||'Done');
+  document.getElementById('ts').textContent=new Date().toLocaleTimeString();
+  var rf=d.red_flags||[];var ss=d.safe_signals||[];
+  var all=rf.map(function(f){return{t:f,c:'d'};}).concat(ss.map(function(f){return{t:f,c:'s'};}));
+  var fs=document.getElementById('fs');
+  if(all.length>0){document.getElementById('ft').textContent='// '+rf.length+' WARNINGS / '+ss.length+' SAFE';document.getElementById('fl').innerHTML=all.map(function(f){return'<div class="fi '+f.c+'"><span>'+(f.c=='d'?'&#9654;':'&#9679;')+'</span><span>'+f.t+'</span></div>';}).join('');fs.style.display='block';}else{fs.style.display='none';}
+  el.style.display='block';el.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+function showErr(m){document.getElementById('errmsg').textContent=m;document.getElementById('err').style.display='block';}
+function clearAll(){document.getElementById('txt').value='';document.getElementById('cnt').textContent='0 chars';document.getElementById('result').style.display='none';document.getElementById('err').style.display='none';}
+document.addEventListener('keydown',function(e){if(e.ctrlKey&&e.key==='Enter')run();});
+loadStats();
+</script>
+</body>
+</html>

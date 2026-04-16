@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Access Blocked - PhishGuard</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Share Tech Mono',monospace;background:#050a0f;color:#c8dae8;min-height:100vh;display:flex;align-items:center;justify-content:center;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(#1a3a55 1px,transparent 1px),linear-gradient(90deg,#1a3a55 1px,transparent 1px);background-size:60px 60px;opacity:.15;pointer-events:none;}
+.box{position:relative;z-index:5;text-align:center;max-width:560px;padding:0 24px;}
+.icon{font-size:5rem;margin-bottom:20px;animation:pulse 2s ease-in-out infinite;}
+@keyframes pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.08);}}
+h1{font-family:'Rajdhani',sans-serif;font-size:2.8rem;font-weight:700;color:#ff4060;letter-spacing:4px;margin-bottom:8px;}
+.sub{font-size:.8rem;color:#5a7a94;letter-spacing:2px;margin-bottom:28px;}
+.url-box{background:rgba(255,64,96,.08);border:1px solid rgba(255,64,96,.3);border-radius:10px;padding:14px 20px;margin-bottom:28px;word-break:break-all;font-size:.8rem;color:#ff8099;}
+.reason{background:#0f2235;border:1px solid #1a3a55;border-radius:10px;padding:16px 20px;margin-bottom:28px;font-size:.78rem;color:#5a7a94;line-height:1.8;text-align:left;}
+.reason .r{color:#c8dae8;margin-bottom:6px;font-size:.8rem;}
+.btns{display:flex;gap:12px;justify-content:center;}
+.btn{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.9rem;letter-spacing:1px;padding:10px 24px;border-radius:7px;border:none;cursor:pointer;text-decoration:none;display:inline-block;transition:all .2s;}
+.btn-back{background:#00d4ff;color:#050a0f;}
+.btn-back:hover{background:#33ddff;}
+.btn-report{background:transparent;color:#5a7a94;border:1px solid #1a3a55;}
+.btn-report:hover{color:#c8dae8;border-color:#5a7a94;}
+</style>
+</head>
+<body>
+<div class="box">
+  <div class="icon">&#128683;</div>
+  <h1>ACCESS BLOCKED</h1>
+  <div class="sub">// PHISHGUARD ENTERPRISE PROTECTION</div>
+  {% if url %}
+  <div class="url-box">&#128279; {{url}}</div>
+  {% endif %}
+  <div class="reason">
+    <div class="r">&#128680; Why was this blocked?</div>
+    This URL has been identified as a potential phishing threat by PhishGuard's detection engine.
+    It matches known attack patterns or is listed in your organization's blacklist.<br><br>
+    <div class="r">&#128172; What should you do?</div>
+    If you believe this is a mistake, contact your IT Security team and provide them with the URL above.
+  </div>
+  <div class="btns">
+    <a href="javascript:history.back()" class="btn btn-back">&#8592; Go Back</a>
+    <a href="/" class="btn btn-report">&#128269; Check URL</a>
+  </div>
+</div>
+</body>
+</html>
