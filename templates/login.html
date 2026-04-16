@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AIPDA — Login</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@600;700&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#050a0f;--panel:#0f2235;--border:#1a3a55;--teal:#00d4ff;--teal-glow:rgba(0,212,255,0.15);--red:#ff4060;--text:#c8dae8;--text-dim:#5a7a94;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;align-items:center;justify-content:center;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:60px 60px;opacity:.15;pointer-events:none;}
+body::after{content:'';position:fixed;top:-200px;left:50%;transform:translateX(-50%);width:600px;height:400px;background:radial-gradient(ellipse,rgba(0,212,255,.06) 0%,transparent 70%);pointer-events:none;}
+.box{position:relative;z-index:5;width:100%;max-width:400px;padding:0 24px;}
+.logo{text-align:center;margin-bottom:36px;}
+.logo-icon{width:56px;height:56px;border:2px solid var(--teal);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.6rem;margin:0 auto 14px;animation:glow 3s ease-in-out infinite;}
+@keyframes glow{0%,100%{box-shadow:0 0 10px var(--teal-glow);}50%{box-shadow:0 0 24px rgba(0,212,255,.35);}}
+.logo h1{font-family:'Rajdhani',sans-serif;font-size:1.6rem;letter-spacing:3px;color:#fff;}
+.logo h1 span{color:var(--teal);}
+.logo p{font-family:'Share Tech Mono',monospace;font-size:.62rem;color:var(--text-dim);letter-spacing:2px;margin-top:4px;}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:32px;}
+.field{margin-bottom:18px;}
+.field label{font-family:'Share Tech Mono',monospace;font-size:.68rem;color:var(--text-dim);letter-spacing:1.5px;display:block;margin-bottom:8px;}
+.field input{width:100%;background:rgba(0,0,0,.3);border:1px solid var(--border);border-radius:8px;padding:11px 14px;color:var(--text);font-family:'Share Tech Mono',monospace;font-size:.84rem;outline:none;transition:border-color .2s;}
+.field input:focus{border-color:var(--teal);}
+.field input::placeholder{color:var(--text-dim);opacity:.5;}
+.btn-login{width:100%;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:1rem;letter-spacing:2px;padding:12px;border-radius:8px;border:none;cursor:pointer;background:var(--teal);color:#050a0f;margin-top:8px;transition:all .2s;}
+.btn-login:hover{background:#33ddff;transform:translateY(-1px);}
+#err{display:none;margin-top:14px;padding:10px 14px;border-radius:7px;background:rgba(255,64,96,.12);border:1px solid rgba(255,64,96,.3);color:var(--red);font-family:'Share Tech Mono',monospace;font-size:.76rem;text-align:center;}
+.back{text-align:center;margin-top:18px;font-family:'Share Tech Mono',monospace;font-size:.68rem;color:var(--text-dim);}
+.back a{color:var(--teal);text-decoration:none;}
+</style>
+</head>
+<body>
+<div class="box">
+  <div class="logo">
+    <div class="logo-icon">&#128737;</div>
+    <h1>AI<span>PDA</span></h1>
+    <p>AI-Powered Phishing Detection</p>
+  </div>
+  <div class="card">
+    <div class="field"><label>// USERNAME</label><input type="text" id="user" placeholder="Enter username" autocomplete="off"></div>
+    <div class="field"><label>// PASSWORD</label><input type="password" id="pass" placeholder="Enter password"></div>
+    <button class="btn-login" onclick="doLogin()">&#10145; SIGN IN</button>
+    <div id="err"></div>
+  </div>
+  <div class="back"><a href="/">&#8592; Back to Scanner</a></div>
+</div>
+<script>
+async function doLogin(){
+  var u=document.getElementById('user').value.trim();
+  var p=document.getElementById('pass').value.trim();
+  if(!u||!p){showErr("Please enter username and password");return;}
+  try{
+    var r=await fetch('/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u,password:p})});
+    var d=await r.json();
+    if(d.success){window.location.href=d.role==='admin'?'/dashboard':'/profile';}
+    else{showErr(d.error||'Login failed');}
+  }catch(e){showErr("Connection error");}
+}
+function showErr(m){var e=document.getElementById('err');e.textContent=m;e.style.display='block';}
+document.addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});
+</script>
+</body>
+</html>

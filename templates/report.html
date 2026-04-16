@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AIPDA — Admin Report</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@600;700&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#050a0f;--panel:#0f2235;--border:#1a3a55;--teal:#00d4ff;--teal-glow:rgba(0,212,255,0.15);--red:#ff4060;--red-glow:rgba(255,64,96,0.15);--yellow:#ffb800;--green:#00e676;--green-glow:rgba(0,230,118,0.15);--text:#c8dae8;--text-dim:#5a7a94;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:60px 60px;opacity:.15;pointer-events:none;z-index:0;}
+header{position:relative;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:0 32px;height:65px;background:rgba(10,21,32,.95);border-bottom:1px solid var(--border);}
+.logo{display:flex;align-items:center;gap:12px;}
+.logo-icon{width:36px;height:36px;border:2px solid var(--teal);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:1rem;}
+.logo h1{font-family:'Rajdhani',sans-serif;font-size:1.25rem;letter-spacing:3px;color:#fff;}
+.logo h1 span{color:var(--teal);}
+.logo p{font-family:'Share Tech Mono',monospace;font-size:.56rem;color:var(--text-dim);letter-spacing:1.5px;}
+nav{display:flex;gap:8px;}
+nav a{font-family:'Share Tech Mono',monospace;font-size:.7rem;color:var(--text-dim);text-decoration:none;padding:6px 12px;border-radius:6px;border:1px solid transparent;transition:all .2s;}
+nav a:hover,nav a.active{border-color:var(--teal);color:var(--teal);background:var(--teal-glow);}
+main{position:relative;z-index:5;max-width:1100px;margin:0 auto;padding:32px 24px 60px;}
+.report-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;}
+.page-title{font-family:'Rajdhani',sans-serif;font-size:1.8rem;font-weight:700;color:#fff;}
+.page-title span{color:var(--teal);}
+.report-meta{font-family:'Share Tech Mono',monospace;font-size:.68rem;color:var(--text-dim);}
+.btn-print{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.85rem;letter-spacing:1px;padding:9px 20px;border-radius:7px;border:none;cursor:pointer;background:var(--teal);color:#050a0f;}
+.btn-print:hover{background:#33ddff;}
+.kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:28px;}
+.kpi{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center;}
+.kpi .n{font-family:'Rajdhani',sans-serif;font-size:1.8rem;font-weight:700;}
+.kpi .l{font-family:'Share Tech Mono',monospace;font-size:.6rem;color:var(--text-dim);margin-top:3px;}
+.kpi.tel .n{color:var(--teal);}
+.kpi.red .n{color:var(--red);}
+.kpi.grn .n{color:var(--green);}
+.kpi.yel .n{color:var(--yellow);}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:20px;}
+.card-head{padding:14px 18px;border-bottom:1px solid var(--border);background:rgba(0,0,0,.2);}
+.card-title{font-family:'Share Tech Mono',monospace;font-size:.7rem;color:var(--teal);letter-spacing:2px;}
+table{width:100%;border-collapse:collapse;}
+th{font-family:'Share Tech Mono',monospace;font-size:.62rem;color:var(--text-dim);padding:10px 14px;text-align:left;border-bottom:1px solid var(--border);background:rgba(0,0,0,.2);}
+td{font-size:.8rem;padding:10px 14px;border-bottom:1px solid rgba(26,58,85,.4);font-family:'Share Tech Mono',monospace;color:var(--text-dim);}
+tr:last-child td{border-bottom:none;}
+.badge{display:inline-block;padding:2px 10px;border-radius:20px;font-size:.65rem;font-weight:700;}
+.badge.ph{background:var(--red-glow);border:1px solid rgba(255,64,96,.3);color:var(--red);}
+.badge.su{background:rgba(255,184,0,.1);border:1px solid rgba(255,184,0,.3);color:var(--yellow);}
+.badge.le,.badge.wh{background:var(--green-glow);border:1px solid rgba(0,230,118,.3);color:var(--green);}
+.summary-box{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:20px;}
+.summary-box h3{font-family:'Rajdhani',sans-serif;font-size:1.1rem;color:var(--teal);margin-bottom:14px;letter-spacing:1px;}
+.summary-box p{font-size:.88rem;color:var(--text-dim);line-height:1.8;}
+.summary-box p strong{color:var(--text);}
+footer{text-align:center;padding:20px;border-top:1px solid var(--border);font-family:'Share Tech Mono',monospace;font-size:.6rem;color:var(--text-dim);position:relative;z-index:5;}
+@media print{
+  body{background:#fff;color:#000;}
+  header,nav,.btn-print{display:none!important;}
+  body::before,body::after{display:none;}
+  .card,.kpi,.summary-box{border-color:#ddd;background:#f9f9f9;}
+  .card-title,.page-title,.kpi .n{color:#003366!important;}
+  .kpi .l,.report-meta,.summary-box p{color:#333!important;}
+  td,th{color:#000!important;}
+}
+@media(max-width:900px){.kpis{grid-template-columns:repeat(3,1fr);}}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo"><div class="logo-icon">&#128737;</div><div><h1>AI<span>PDA</span></h1><p>AI-Powered Phishing Detection</p></div></div>
+  <nav>
+    <a href="/dashboard">&#8592; Dashboard</a>
+    <a href="/admin/report" class="active">&#128196; Report</a>
+    <a href="/logout" style="color:var(--red);border-color:rgba(255,64,96,.3);">&#9211; Logout</a>
+  </nav>
+</header>
+<main>
+  <div class="report-header">
+    <div>
+      <div class="page-title">Security <span>Report</span></div>
+      <div class="report-meta">// Generated: {{report_date}} &nbsp;|&nbsp; AIPDA v3.0</div>
+    </div>
+    <button class="btn-print" onclick="window.print()">&#128438; Print / Save PDF</button>
+  </div>
+
+  <!-- Executive Summary -->
+  <div class="summary-box">
+    <h3>&#128196; EXECUTIVE SUMMARY</h3>
+    <p>
+      This report covers the AIPDA threat detection system activity.<br>
+      Total scans processed: <strong>{{stats.total}}</strong> &nbsp;|&nbsp;
+      Phishing detected: <strong style="color:#ff4060;">{{stats.phishing}}</strong> &nbsp;|&nbsp;
+      Suspicious: <strong style="color:#ffb800;">{{stats.suspicious}}</strong> &nbsp;|&nbsp;
+      Legitimate: <strong style="color:#00e676;">{{stats.legitimate}}</strong><br>
+      Active users: <strong>{{stats.users}}</strong> &nbsp;|&nbsp;
+      Whitelisted domains: <strong>{{stats.whitelist}}</strong> &nbsp;|&nbsp;
+      Blacklisted domains: <strong>{{stats.blacklist}}</strong>
+    </p>
+  </div>
+
+  <!-- KPIs -->
+  <div class="kpis">
+    <div class="kpi tel"><div class="n">{{stats.total}}</div><div class="l">TOTAL SCANS</div></div>
+    <div class="kpi red"><div class="n">{{stats.phishing}}</div><div class="l">PHISHING</div></div>
+    <div class="kpi yel"><div class="n">{{stats.suspicious}}</div><div class="l">SUSPICIOUS</div></div>
+    <div class="kpi grn"><div class="n">{{stats.legitimate}}</div><div class="l">LEGITIMATE</div></div>
+    <div class="kpi tel"><div class="n">{{stats.users}}</div><div class="l">USERS</div></div>
+    <div class="kpi red"><div class="n">{{stats.blacklist}}</div><div class="l">BLACKLISTED</div></div>
+  </div>
+
+  <!-- Top Users -->
+  <div class="card">
+    <div class="card-head"><span class="card-title">// TOP USERS BY SCAN ACTIVITY</span></div>
+    <table>
+      <thead><tr><th>#</th><th>USERNAME</th><th>TOTAL SCANS</th><th>PHISHING FOUND</th><th>THREAT RATE</th></tr></thead>
+      <tbody>
+        {% for u in top_users %}
+        <tr>
+          <td>{{loop.index}}</td>
+          <td style="color:var(--teal);">{{u.username}}</td>
+          <td>{{u.total}}</td>
+          <td style="color:var(--red);">{{u.phishing}}</td>
+          <td>{% if u.total > 0 %}{{((u.phishing / u.total) * 100)|round(1)}}%{% else %}0%{% endif %}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="5" style="text-align:center;opacity:.5;">No data yet</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- All Users -->
+  <div class="card">
+    <div class="card-head"><span class="card-title">// ALL REGISTERED USERS</span></div>
+    <table>
+      <thead><tr><th>#</th><th>USERNAME</th><th>ROLE</th><th>CREATED</th></tr></thead>
+      <tbody>
+        {% for u in all_users %}
+        <tr>
+          <td>{{u.id}}</td>
+          <td style="color:var(--text);">{{u.username}}</td>
+          <td><span class="badge {% if u.role == 'admin' %}ph{% else %}le{% endif %}">{{u.role.upper()}}</span></td>
+          <td>{{u.created_at}}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Recent Phishing -->
+  <div class="card">
+    <div class="card-head"><span class="card-title">// RECENT PHISHING DETECTIONS</span></div>
+    <table>
+      <thead><tr><th>#</th><th>USER</th><th>INPUT</th><th>METHOD</th><th>TIME</th></tr></thead>
+      <tbody>
+        {% for s in recent_phishing %}
+        <tr>
+          <td>{{s.id}}</td>
+          <td style="color:var(--teal);">{{s.username}}</td>
+          <td style="max-width:320px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--red);">{{s.input[:70]}}{% if s.input|length > 70 %}...{% endif %}</td>
+          <td>{{s.method}}</td>
+          <td>{{s.timestamp}}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="5" style="text-align:center;opacity:.5;">No phishing detected yet</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</main>
+<footer>AIPDA &middot; CONFIDENTIAL SECURITY REPORT &middot; {{report_date}}</footer>
+</body>
+</html>
