@@ -1,15 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr" id="htmlRoot">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AIPDA</title>
-<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@600;700&family=Inter:wght@300;400;500&family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#050a0f;--bg2:#0a1520;--panel:#0f2235;--border:#1a3a55;--teal:#00d4ff;--teal-glow:rgba(0,212,255,0.15);--red:#ff4060;--red-glow:rgba(255,64,96,0.15);--yellow:#ffb800;--yellow-glow:rgba(255,184,0,0.15);--green:#00e676;--green-glow:rgba(0,230,118,0.15);--text:#c8dae8;--text-dim:#5a7a94;}
 *{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+body.ar{font-family:'Tajawal',sans-serif;}
 body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:60px 60px;opacity:.15;pointer-events:none;z-index:0;}
+body::after{content:'';position:fixed;top:-200px;left:50%;transform:translateX(-50%);width:800px;height:500px;background:radial-gradient(ellipse,rgba(0,212,255,.06) 0%,transparent 70%);pointer-events:none;z-index:0;}
 header{position:relative;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:0 32px;height:65px;background:rgba(10,21,32,.95);border-bottom:1px solid var(--border);}
 .logo{display:flex;align-items:center;gap:12px;}
 .logo-icon{width:36px;height:36px;border:2px solid var(--teal);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:1rem;animation:glow 3s ease-in-out infinite;}
@@ -17,26 +19,36 @@ header{position:relative;z-index:10;display:flex;align-items:center;justify-cont
 .logo h1{font-family:'Rajdhani',sans-serif;font-size:1.25rem;letter-spacing:3px;color:#fff;}
 .logo h1 span{color:var(--teal);}
 .logo p{font-family:'Share Tech Mono',monospace;font-size:.56rem;color:var(--text-dim);letter-spacing:1.5px;}
+body.ar .logo p{font-family:'Tajawal',sans-serif;font-size:.7rem;letter-spacing:0;}
 nav{display:flex;align-items:center;gap:8px;}
 nav a{font-family:'Share Tech Mono',monospace;font-size:.7rem;color:var(--text-dim);text-decoration:none;padding:6px 12px;border-radius:6px;border:1px solid transparent;transition:all .2s;}
+body.ar nav a{font-family:'Tajawal',sans-serif;font-size:.85rem;letter-spacing:0;}
 nav a:hover,nav a.active{border-color:var(--teal);color:var(--teal);background:var(--teal-glow);}
+.lang-btn{font-family:'Tajawal',sans-serif;font-size:.85rem;padding:5px 14px;border-radius:6px;border:1px solid var(--teal);background:var(--teal-glow);color:var(--teal);cursor:pointer;transition:all .2s;font-weight:700;}
+.lang-btn:hover{background:var(--teal);color:var(--bg);}
 .status{display:flex;align-items:center;gap:6px;font-family:'Share Tech Mono',monospace;font-size:.68rem;color:var(--green);}
 .status::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);animation:blink 2s infinite;}
 @keyframes blink{0%,100%{opacity:1;}50%{opacity:.3;}}
 main{position:relative;z-index:5;max-width:900px;margin:0 auto;padding:36px 24px 60px;}
 .title{text-align:center;margin-bottom:30px;}
 .eye{font-family:'Share Tech Mono',monospace;font-size:.68rem;color:var(--teal);letter-spacing:3px;margin-bottom:10px;}
-.title h2{font-family:'Rajdhani',sans-serif;font-size:2.2rem;font-weight:700;color:#fff;line-height:1.1;}
+body.ar .eye{font-family:'Tajawal',sans-serif;letter-spacing:0;font-size:.8rem;}
+.title h2{font-family:'Rajdhani',sans-serif;font-size:2.2rem;font-weight:700;color:#fff;line-height:1.2;}
+body.ar .title h2{font-family:'Tajawal',sans-serif;font-size:2rem;}
 .title h2 em{font-style:normal;color:var(--teal);}
 .title p{margin-top:8px;font-size:.87rem;color:var(--text-dim);}
+body.ar .title p{font-family:'Tajawal',sans-serif;font-size:.95rem;}
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px;}
 .stat{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px;display:flex;align-items:center;gap:11px;}
 .stat .ico{font-size:1.3rem;}
 .stat .val{font-family:'Rajdhani',sans-serif;font-size:1.2rem;font-weight:700;color:var(--teal);}
 .stat .lbl{font-size:.65rem;color:var(--text-dim);}
+body.ar .stat .lbl{font-family:'Tajawal',sans-serif;font-size:.8rem;}
 .chips-lbl{font-family:'Share Tech Mono',monospace;font-size:.66rem;color:var(--text-dim);letter-spacing:2px;margin-bottom:8px;}
+body.ar .chips-lbl{font-family:'Tajawal',sans-serif;letter-spacing:0;font-size:.8rem;}
 .chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:20px;}
 .chip{font-family:'Share Tech Mono',monospace;font-size:.7rem;padding:6px 12px;border-radius:6px;border:1px solid var(--border);background:var(--bg2);color:var(--text-dim);cursor:pointer;transition:all .2s;}
+body.ar .chip{font-family:'Tajawal',sans-serif;font-size:.85rem;}
 .chip.d:hover{border-color:var(--red);color:var(--red);background:var(--red-glow);}
 .chip.w:hover{border-color:var(--yellow);color:var(--yellow);background:var(--yellow-glow);}
 .chip.s:hover{border-color:var(--green);color:var(--green);background:var(--green-glow);}
@@ -51,132 +63,294 @@ main{position:relative;z-index:5;max-width:900px;margin:0 auto;padding:36px 24px
 .ptitle{font-family:'Share Tech Mono',monospace;font-size:.68rem;color:var(--text-dim);}
 .counter{font-family:'Share Tech Mono',monospace;font-size:.63rem;color:var(--text-dim);}
 textarea{width:100%;min-height:140px;padding:18px;background:transparent;border:none;outline:none;font-family:'Share Tech Mono',monospace;font-size:.84rem;color:var(--text);resize:vertical;line-height:1.7;}
+body.ar textarea{font-family:'Tajawal',sans-serif;font-size:1rem;}
 textarea::placeholder{color:var(--text-dim);opacity:.55;}
 .pfoot{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;border-top:1px solid var(--border);background:rgba(0,0,0,.15);}
 .hint{font-family:'Share Tech Mono',monospace;font-size:.62rem;color:var(--text-dim);}
+body.ar .hint{font-family:'Tajawal',sans-serif;font-size:.78rem;}
 .btns{display:flex;gap:9px;}
 .btn{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.9rem;letter-spacing:1px;padding:9px 22px;border-radius:7px;border:none;cursor:pointer;transition:all .2s;}
+body.ar .btn{font-family:'Tajawal',sans-serif;font-size:1rem;letter-spacing:0;}
 .btn-p{background:var(--teal);color:var(--bg);}
 .btn-p:hover{background:#33ddff;transform:translateY(-1px);}
 .btn-s{background:transparent;color:var(--text-dim);border:1px solid var(--border);}
 .btn-s:hover{color:var(--text);border-color:var(--text-dim);}
 #err{display:none;padding:10px 14px;border-radius:7px;background:var(--red-glow);border:1px solid rgba(255,64,96,.3);color:var(--red);font-family:'Share Tech Mono',monospace;font-size:.76rem;margin-top:8px;}
+body.ar #err{font-family:'Tajawal',sans-serif;font-size:.9rem;}
 #loading{display:none;text-align:center;padding:30px;}
 .scan{width:100%;max-width:360px;height:2px;background:var(--border);border-radius:2px;margin:14px auto 0;overflow:hidden;}
 .scan::after{content:'';display:block;height:100%;background:linear-gradient(90deg,transparent,var(--teal),transparent);animation:scan 1.2s ease-in-out infinite;}
 @keyframes scan{0%{transform:translateX(-100%);}100%{transform:translateX(400%);}}
 .ltxt{font-family:'Share Tech Mono',monospace;font-size:.76rem;color:var(--teal);letter-spacing:2px;}
+body.ar .ltxt{font-family:'Tajawal',sans-serif;letter-spacing:0;font-size:.9rem;}
 .lsub{font-family:'Share Tech Mono',monospace;font-size:.62rem;color:var(--text-dim);margin-top:5px;}
+body.ar .lsub{font-family:'Tajawal',sans-serif;font-size:.8rem;}
 #result{display:none;border-radius:12px;overflow:hidden;border:1px solid var(--border);}
 .rhead{padding:20px 24px;display:flex;align-items:center;gap:16px;position:relative;overflow:hidden;}
 .rhead::before{content:'';position:absolute;inset:0;opacity:.05;background:radial-gradient(ellipse at left,currentColor 0%,transparent 60%);}
 .vicon{width:56px;height:56px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:1.6rem;border:2px solid currentColor;flex-shrink:0;}
 .vword{font-family:'Rajdhani',sans-serif;font-size:1.8rem;font-weight:700;letter-spacing:3px;}
+body.ar .vword{font-family:'Tajawal',sans-serif;letter-spacing:0;}
 .vconf{font-family:'Share Tech Mono',monospace;font-size:.66rem;letter-spacing:1.5px;margin-top:5px;opacity:.7;}
+body.ar .vconf{font-family:'Tajawal',sans-serif;letter-spacing:0;font-size:.8rem;}
 #result.ph{border-color:rgba(255,64,96,.4);}#result.ph .rhead{background:rgba(255,64,96,.07);color:var(--red);}#result.ph .vicon{background:var(--red-glow);}
 #result.su{border-color:rgba(255,184,0,.4);}#result.su .rhead{background:rgba(255,184,0,.07);color:var(--yellow);}#result.su .vicon{background:var(--yellow-glow);}
 #result.le,#result.wh{border-color:rgba(0,230,118,.4);}#result.le .rhead,#result.wh .rhead{background:rgba(0,230,118,.06);color:var(--green);}#result.le .vicon,#result.wh .vicon{background:var(--green-glow);}
 .rbody{background:var(--panel);padding:20px 24px;}
 .stitle{font-family:'Share Tech Mono',monospace;font-size:.62rem;color:var(--text-dim);letter-spacing:2px;margin-bottom:9px;}
+body.ar .stitle{font-family:'Tajawal',sans-serif;letter-spacing:0;font-size:.8rem;}
 .expl{font-size:.88rem;color:var(--text);line-height:1.7;padding:12px 14px;background:rgba(0,0,0,.2);border-radius:7px;border-left:3px solid var(--border);margin-bottom:16px;}
+body.ar .expl{font-family:'Tajawal',sans-serif;font-size:1rem;border-left:none;border-right:3px solid var(--border);}
 .fgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
 .fi{display:flex;align-items:flex-start;gap:8px;padding:9px 11px;border-radius:7px;font-size:.78rem;font-family:'Share Tech Mono',monospace;line-height:1.5;}
+body.ar .fi{font-family:'Tajawal',sans-serif;font-size:.9rem;}
 .fi.d{background:var(--red-glow);border:1px solid rgba(255,64,96,.22);color:#ff8099;}
 .fi.s{background:var(--green-glow);border:1px solid rgba(0,230,118,.18);color:#66ffb2;}
 .rfooter{display:flex;align-items:center;justify-content:space-between;padding-top:13px;border-top:1px solid var(--border);}
 .mtag{font-family:'Share Tech Mono',monospace;font-size:.63rem;color:var(--teal);background:var(--teal-glow);border:1px solid rgba(0,212,255,.18);padding:3px 10px;border-radius:20px;}
+body.ar .mtag{font-family:'Tajawal',sans-serif;font-size:.78rem;}
 .ts{font-family:'Share Tech Mono',monospace;font-size:.61rem;color:var(--text-dim);}
 footer{text-align:center;padding:20px;border-top:1px solid var(--border);font-family:'Share Tech Mono',monospace;font-size:.6rem;color:var(--text-dim);letter-spacing:1px;position:relative;z-index:5;}
+body.ar footer{font-family:'Tajawal',sans-serif;font-size:.8rem;letter-spacing:0;}
 @media(max-width:700px){.stats{grid-template-columns:1fr 1fr;}.fgrid{grid-template-columns:1fr;}}
 </style>
 </head>
 <body>
 <header>
-  <div class="logo"><div class="logo-icon">&#128737;</div><div><h1>AI<span>PDA</span></h1><p>AI-Powered Phishing Detection</p></div></div>
-  <nav><a href="/" class="active">&#128269; Scanner</a><a href="/dashboard">&#128202; Dashboard</a></nav>
-  <div class="status">ONLINE</div>
+  <div class="logo">
+    <div class="logo-icon">&#128737;</div>
+    <div>
+      <h1>AI<span>PDA</span></h1>
+      <p class="t" data-en="AI-POWERED PHISHING DETECTION" data-ar="نظام كشف التصيد الاحتيالي">AI-POWERED PHISHING DETECTION</p>
+    </div>
+  </div>
+  <nav>
+    <a href="/" class="active t" data-en="&#128269; Scanner" data-ar="&#128269; الفاحص">&#128269; Scanner</a>
+    <a href="/dashboard" class="t" data-en="&#128202; Dashboard" data-ar="&#128202; لوحة التحكم">&#128202; Dashboard</a>
+    <a href="/login" class="t" data-en="&#128274; Login" data-ar="&#128274; تسجيل الدخول">&#128274; Login</a>
+    <button class="lang-btn" onclick="toggleLang()" id="langBtn">عربي</button>
+  </nav>
 </header>
+
 <main>
   <div class="title">
-    <div class="eye">// ENTERPRISE THREAT ANALYSIS ENGINE v2.0</div>
-    <h2>Detect <em>Phishing Attacks</em> — Protect Your Organization</h2>
-    <p>AI-powered analysis with Whitelist / Blacklist / Proxy integration</p>
+    <div class="eye t" data-en="// ENTERPRISE THREAT ANALYSIS ENGINE v2.0" data-ar="// محرك تحليل التهديدات المؤسسي">// ENTERPRISE THREAT ANALYSIS ENGINE v2.0</div>
+    <h2 class="t" data-en="Detect <em>Phishing Attacks</em> — Protect Your Organization" data-ar="اكتشف <em>هجمات التصيد</em> — احمِ مؤسستك">Detect <em>Phishing Attacks</em> — Protect Your Organization</h2>
+    <p class="t" data-en="AI-powered analysis with Whitelist / Blacklist / Proxy integration" data-ar="تحليل بالذكاء الاصطناعي مع دعم القائمة البيضاء والسوداء والبروكسي">AI-powered analysis with Whitelist / Blacklist / Proxy integration</p>
   </div>
+
   <div class="stats">
-    <div class="stat"><div class="ico">&#128202;</div><div><div class="val" id="st1">-</div><div class="lbl">Total Scans</div></div></div>
-    <div class="stat"><div class="ico">&#128680;</div><div><div class="val" id="st2">-</div><div class="lbl">Phishing</div></div></div>
-    <div class="stat"><div class="ico">&#9989;</div><div><div class="val" id="st3">-</div><div class="lbl">Legitimate</div></div></div>
-    <div class="stat"><div class="ico">&#128274;</div><div><div class="val" id="st4">-</div><div class="lbl">Blacklisted</div></div></div>
+    <div class="stat"><div class="ico">&#128202;</div><div><div class="val" id="st1">-</div><div class="lbl t" data-en="Total Scans" data-ar="إجمالي الفحوصات">Total Scans</div></div></div>
+    <div class="stat"><div class="ico">&#128680;</div><div><div class="val" id="st2">-</div><div class="lbl t" data-en="Phishing" data-ar="تصيد">Phishing</div></div></div>
+    <div class="stat"><div class="ico">&#9989;</div><div><div class="val" id="st3">-</div><div class="lbl t" data-en="Legitimate" data-ar="آمن">Legitimate</div></div></div>
+    <div class="stat"><div class="ico">&#128274;</div><div><div class="val" id="st4">-</div><div class="lbl t" data-en="Blacklisted" data-ar="محظور">Blacklisted</div></div></div>
   </div>
-  <div class="chips-lbl">// QUICK TEST SAMPLES</div>
+
+  <div class="chips-lbl t" data-en="// QUICK TEST SAMPLES" data-ar="// نماذج اختبار سريعة">// QUICK TEST SAMPLES</div>
   <div class="chips">
-    <button class="chip d" onclick="ex('p1')">&#9888; Phishing Email</button>
-    <button class="chip d" onclick="ex('p2')">&#9888; Fake Bank</button>
-    <button class="chip w" onclick="ex('su')">~ Suspicious URL</button>
-    <button class="chip s" onclick="ex('s1')">&#10003; Safe Email</button>
-    <button class="chip s" onclick="ex('s2')">&#10003; Safe URL</button>
+    <button class="chip d" onclick="ex('p1')" data-en="&#9888; Phishing Email" data-ar="&#9888; إيميل تصيد">&#9888; Phishing Email</button>
+    <button class="chip d" onclick="ex('p2')" data-en="&#9888; Fake Bank" data-ar="&#9888; بنك مزيف">&#9888; Fake Bank</button>
+    <button class="chip w" onclick="ex('su')" data-en="~ Suspicious URL" data-ar="~ رابط مشبوه">~ Suspicious URL</button>
+    <button class="chip s" onclick="ex('s1')" data-en="&#10003; Safe Email" data-ar="&#10003; إيميل آمن">&#10003; Safe Email</button>
+    <button class="chip s" onclick="ex('s2')" data-en="&#10003; Safe URL" data-ar="&#10003; رابط آمن">&#10003; Safe URL</button>
+    <button class="chip d" onclick="ex('ar1')" data-en="&#9888; Arabic Phishing" data-ar="&#9888; تصيد عربي">&#9888; Arabic Phishing</button>
   </div>
+
   <div class="panel">
     <div class="phead">
-      <div style="display:flex;align-items:center;gap:10px;"><div class="dots"><span></span><span></span><span></span></div><span class="ptitle">INPUT_TARGET.txt</span></div>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div class="dots"><span></span><span></span><span></span></div>
+        <span class="ptitle t" data-en="INPUT_TARGET.txt" data-ar="النص_المدخل.txt">INPUT_TARGET.txt</span>
+      </div>
       <span class="counter" id="cnt">0 chars</span>
     </div>
-    <textarea id="txt" placeholder="// Paste suspicious email, URL, or message here...&#10;// Supports Arabic and English&#10;// Example: URGENT verify your account http://192.168.1.1/login" oninput="document.getElementById('cnt').textContent=this.value.length+' chars'"></textarea>
+    <textarea id="txt" oninput="document.getElementById('cnt').textContent=this.value.length+' chars'"></textarea>
     <div id="err"><span id="errmsg"></span></div>
     <div class="pfoot">
-      <span class="hint">Ctrl+Enter to analyze</span>
-      <div class="btns"><button class="btn btn-s" onclick="clearAll()">Clear</button><button class="btn btn-p" onclick="run()">&#10145; ANALYZE</button></div>
+      <span class="hint t" data-en="Ctrl+Enter to analyze" data-ar="Ctrl+Enter للتحليل">Ctrl+Enter to analyze</span>
+      <div class="btns">
+        <button class="btn btn-s t" data-en="Clear" data-ar="مسح" onclick="clearAll()">Clear</button>
+        <button class="btn btn-p t" data-en="&#10145; ANALYZE" data-ar="&#10145; تحليل" onclick="run()">&#10145; ANALYZE</button>
+      </div>
     </div>
   </div>
-  <div id="loading"><div class="ltxt">SCANNING THREAT PATTERNS...</div><div class="lsub">Checking whitelist · blacklist · AI engine</div><div class="scan"></div></div>
+
+  <div id="loading">
+    <div class="ltxt t" data-en="SCANNING THREAT PATTERNS..." data-ar="جاري فحص أنماط التهديد...">SCANNING THREAT PATTERNS...</div>
+    <div class="lsub t" data-en="Checking whitelist · blacklist · AI engine" data-ar="فحص القائمة البيضاء · السوداء · محرك الذكاء الاصطناعي">Checking whitelist · blacklist · AI engine</div>
+    <div class="scan"></div>
+  </div>
+
   <div id="result">
-    <div class="rhead"><div class="vicon" id="vi"></div><div><div class="vword" id="vw"></div><div class="vconf" id="vc"></div></div></div>
+    <div class="rhead">
+      <div class="vicon" id="vi"></div>
+      <div><div class="vword" id="vw"></div><div class="vconf" id="vc"></div></div>
+    </div>
     <div class="rbody">
-      <div class="stitle">// ANALYSIS REPORT</div>
+      <div class="stitle t" data-en="// ANALYSIS REPORT" data-ar="// تقرير التحليل">// ANALYSIS REPORT</div>
       <div class="expl" id="expl"></div>
-      <div id="fs" style="display:none"><div class="stitle" id="ft"></div><div class="fgrid" id="fl"></div></div>
-      <div class="rfooter"><span class="mtag" id="mt"></span><span class="ts" id="ts"></span></div>
+      <div id="fs" style="display:none">
+        <div class="stitle" id="ft"></div>
+        <div class="fgrid" id="fl"></div>
+      </div>
+      <div class="rfooter">
+        <span class="mtag" id="mt"></span>
+        <span class="ts" id="ts"></span>
+      </div>
     </div>
   </div>
 </main>
-<footer>AIPDA &middot; AI-POWERED SECURITY PORTAL &middot; v2.0</footer>
+
+<footer class="t" data-en="AIPDA &middot; AI-POWERED PHISHING DETECTION &middot; v3.0" data-ar="AIPDA &middot; نظام كشف التصيد الاحتيالي بالذكاء الاصطناعي &middot; v3.0">AIPDA &middot; AI-POWERED PHISHING DETECTION &middot; v3.0</footer>
+
 <script>
-var EX={p1:"URGENT: Dear valued customer, your bank account suspended. Verify: http://192.168.0.1/verify enter password and credit card.",p2:"Dear User, unusual login. Account closes in 24h. Confirm: http://amaz0n-secure.xyz/verify",su:"Check this: https://bit.ly/3xK9mZq limited time!",s1:"Hi Sarah, please find attached the meeting agenda for Thursday. Best regards, John",s2:"https://www.google.com/search?q=phishing"};
-function ex(k){document.getElementById('txt').value=EX[k];document.getElementById('cnt').textContent=EX[k].length+' chars';document.getElementById('err').style.display='none';document.getElementById('result').style.display='none';}
-function loadStats(){fetch('/api/stats').then(r=>r.json()).then(d=>{document.getElementById('st1').textContent=d.total;document.getElementById('st2').textContent=d.phishing;document.getElementById('st3').textContent=d.legitimate;document.getElementById('st4').textContent=d.blacklist;}).catch(function(){});}
-async function run(){
-  var t=document.getElementById('txt').value.trim();
-  if(!t){showErr("Please enter text or URL.");return;}
-  document.getElementById('err').style.display='none';document.getElementById('result').style.display='none';document.getElementById('loading').style.display='block';
-  try{
-    var r=await fetch('/analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:t})});
-    var d=await r.json();
-    document.getElementById('loading').style.display='none';
-    if(d.error){showErr(d.error);return;}
-    show(d);loadStats();
-  }catch(e){document.getElementById('loading').style.display='none';showErr("Cannot connect to server.");}
+// ---- TRANSLATIONS ----
+var LANG = localStorage.getItem('lang') || 'en';
+
+var EX = {
+  p1: "URGENT: Your bank account has been suspended due to suspicious activity. Verify immediately at http://192.168.0.1/verify and enter your password and credit card.",
+  p2: "Dear Customer, We detected unusual login to your Amazon account. Confirm identity: http://amaz0n-secure.xyz/verify?token=abc123",
+  su: "Check this deal: https://bit.ly/3xK9mZq limited time only!",
+  s1: "Hi Sarah, please find attached the meeting agenda for Thursday. Best regards, John",
+  s2: "https://www.google.com/search?q=phishing+detection",
+  ar1: "عاجل: تم تعليق حسابك البنكي بسبب نشاط مشبوه. تحقق من هويتك الآن على http://192.168.0.1/login وادخل كلمة المرور ورقم بطاقة الائتمان فوراً."
+};
+
+var VERDICTS = {
+  en: { PHISHING:'PHISHING', SUSPICIOUS:'SUSPICIOUS', LEGITIMATE:'LEGITIMATE', WHITELISTED:'WHITELISTED' },
+  ar: { PHISHING:'تصيد احتيالي', SUSPICIOUS:'مشبوه', LEGITIMATE:'آمن', WHITELISTED:'موثوق' }
+};
+
+var CONF = {
+  en: { High:'High confidence', Medium:'Medium confidence', Low:'Low confidence' },
+  ar: { High:'ثقة عالية', Medium:'ثقة متوسطة', Low:'ثقة منخفضة' }
+};
+
+function applyLang() {
+  var html = document.getElementById('htmlRoot');
+  var body = document.body;
+  if (LANG === 'ar') {
+    html.setAttribute('lang','ar');
+    html.setAttribute('dir','rtl');
+    body.classList.add('ar');
+    document.getElementById('langBtn').textContent = 'English';
+    document.getElementById('txt').placeholder = '// الصق هنا الرسالة أو الرابط أو البريد الإلكتروني المشبوه...\n// مثال: عاجل: تحقق من حسابك على http://192.168.1.1/login';
+  } else {
+    html.setAttribute('lang','en');
+    html.setAttribute('dir','ltr');
+    body.classList.remove('ar');
+    document.getElementById('langBtn').textContent = 'عربي';
+    document.getElementById('txt').placeholder = '// Paste suspicious email, URL, or message here...\n// Example: URGENT verify your account http://192.168.1.1/login';
+  }
+  // Translate all elements with class 't'
+  document.querySelectorAll('.t').forEach(function(el) {
+    var val = el.getAttribute('data-' + LANG);
+    if (val) el.innerHTML = val;
+  });
+  // Translate chip buttons
+  document.querySelectorAll('.chip').forEach(function(el) {
+    var val = el.getAttribute('data-' + LANG);
+    if (val) el.innerHTML = val;
+  });
 }
-function show(d){
-  var v=(d.verdict||'UNKNOWN').toUpperCase();
-  var cm={PHISHING:'ph',SUSPICIOUS:'su',LEGITIMATE:'le',WHITELISTED:'wh'};
-  var im={PHISHING:'&#128680;',SUSPICIOUS:'&#9888;&#65039;',LEGITIMATE:'&#9989;',WHITELISTED:'&#128274;'};
-  var el=document.getElementById('result');
-  el.className=cm[v]||'le';
-  document.getElementById('vi').innerHTML=im[v]||'?';
-  document.getElementById('vw').textContent=v;
-  document.getElementById('vc').textContent='CONFIDENCE: '+(d.confidence||'N/A').toUpperCase();
-  document.getElementById('expl').textContent=d.explanation||'';
-  document.getElementById('mt').textContent='> '+(d.method||'Done');
-  document.getElementById('ts').textContent=new Date().toLocaleTimeString();
-  var rf=d.red_flags||[];var ss=d.safe_signals||[];
-  var all=rf.map(function(f){return{t:f,c:'d'};}).concat(ss.map(function(f){return{t:f,c:'s'};}));
-  var fs=document.getElementById('fs');
-  if(all.length>0){document.getElementById('ft').textContent='// '+rf.length+' WARNINGS / '+ss.length+' SAFE';document.getElementById('fl').innerHTML=all.map(function(f){return'<div class="fi '+f.c+'"><span>'+(f.c=='d'?'&#9654;':'&#9679;')+'</span><span>'+f.t+'</span></div>';}).join('');fs.style.display='block';}else{fs.style.display='none';}
-  el.style.display='block';el.scrollIntoView({behavior:'smooth',block:'nearest'});
+
+function toggleLang() {
+  LANG = LANG === 'en' ? 'ar' : 'en';
+  localStorage.setItem('lang', LANG);
+  applyLang();
 }
-function showErr(m){document.getElementById('errmsg').textContent=m;document.getElementById('err').style.display='block';}
-function clearAll(){document.getElementById('txt').value='';document.getElementById('cnt').textContent='0 chars';document.getElementById('result').style.display='none';document.getElementById('err').style.display='none';}
-document.addEventListener('keydown',function(e){if(e.ctrlKey&&e.key==='Enter')run();});
+
+// ---- EXAMPLES ----
+function ex(k) {
+  document.getElementById('txt').value = EX[k];
+  document.getElementById('cnt').textContent = EX[k].length + ' chars';
+  document.getElementById('err').style.display = 'none';
+  document.getElementById('result').style.display = 'none';
+}
+
+// ---- STATS ----
+function loadStats() {
+  fetch('/api/stats').then(function(r){return r.json();}).then(function(d){
+    document.getElementById('st1').textContent = d.total;
+    document.getElementById('st2').textContent = d.phishing;
+    document.getElementById('st3').textContent = d.legitimate;
+    document.getElementById('st4').textContent = d.blacklist;
+  }).catch(function(){});
+}
+
+// ---- ANALYZE ----
+async function run() {
+  var t = document.getElementById('txt').value.trim();
+  var errMsg = LANG === 'ar' ? 'الرجاء إدخال نص أو رابط' : 'Please enter text or URL.';
+  if (!t) { showErr(errMsg); return; }
+  document.getElementById('err').style.display = 'none';
+  document.getElementById('result').style.display = 'none';
+  document.getElementById('loading').style.display = 'block';
+  try {
+    var r = await fetch('/analyze', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({text: t})
+    });
+    var d = await r.json();
+    document.getElementById('loading').style.display = 'none';
+    if (d.error) { showErr(d.error); return; }
+    show(d);
+    loadStats();
+  } catch(e) {
+    document.getElementById('loading').style.display = 'none';
+    showErr(LANG === 'ar' ? 'لا يمكن الاتصال بالخادم' : 'Cannot connect to server.');
+  }
+}
+
+// ---- SHOW RESULT ----
+function show(d) {
+  var v = (d.verdict || 'UNKNOWN').toUpperCase();
+  var cm = {PHISHING:'ph', SUSPICIOUS:'su', LEGITIMATE:'le', WHITELISTED:'wh'};
+  var im = {PHISHING:'&#128680;', SUSPICIOUS:'&#9888;&#65039;', LEGITIMATE:'&#9989;', WHITELISTED:'&#128274;'};
+  var el = document.getElementById('result');
+  el.className = cm[v] || 'le';
+  document.getElementById('vi').innerHTML = im[v] || '?';
+  document.getElementById('vw').textContent = VERDICTS[LANG][v] || v;
+  var conf = d.confidence || 'N/A';
+  document.getElementById('vc').textContent = (CONF[LANG][conf] || conf).toUpperCase();
+  document.getElementById('expl').textContent = d.explanation || '';
+  document.getElementById('mt').textContent = '> ' + (d.method || 'Done');
+  document.getElementById('ts').textContent = new Date().toLocaleTimeString();
+  var rf = d.red_flags || [];
+  var ss = d.safe_signals || [];
+  var all = rf.map(function(f){return{t:f,c:'d'};}).concat(ss.map(function(f){return{t:f,c:'s'};}));
+  var fs = document.getElementById('fs');
+  if (all.length > 0) {
+    var warnLabel = LANG === 'ar' ? '// ' + rf.length + ' تحذير · ' + ss.length + ' إشارة آمنة' : '// ' + rf.length + ' WARNINGS / ' + ss.length + ' SAFE';
+    document.getElementById('ft').textContent = warnLabel;
+    document.getElementById('fl').innerHTML = all.map(function(f){
+      return '<div class="fi '+f.c+'"><span>'+(f.c==='d'?'&#9654;':'&#9679;')+'</span><span>'+f.t+'</span></div>';
+    }).join('');
+    fs.style.display = 'block';
+  } else { fs.style.display = 'none'; }
+  el.style.display = 'block';
+  el.scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+function showErr(m) {
+  document.getElementById('errmsg').textContent = m;
+  document.getElementById('err').style.display = 'block';
+}
+
+function clearAll() {
+  document.getElementById('txt').value = '';
+  document.getElementById('cnt').textContent = '0 chars';
+  document.getElementById('result').style.display = 'none';
+  document.getElementById('err').style.display = 'none';
+}
+
+document.addEventListener('keydown', function(e) {
+  if (e.ctrlKey && e.key === 'Enter') run();
+});
+
+// Init
+applyLang();
 loadStats();
 </script>
 </body>
