@@ -3,245 +3,426 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AIPDA - Dashboard</title>
-<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<title>AIPDA — Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#050a0f;--bg2:#0a1520;--panel:#0f2235;--border:#1a3a55;--teal:#00d4ff;--teal-glow:rgba(0,212,255,0.15);--red:#ff4060;--red-glow:rgba(255,64,96,0.15);--yellow:#ffb800;--green:#00e676;--green-glow:rgba(0,230,118,0.15);--text:#c8dae8;--text-dim:#5a7a94;}
+:root{
+  --bg:#0f1117;--surface:#1a1d27;--surface2:#22263a;--border:#2d3348;
+  --primary:#4f8ef7;--primary-dim:rgba(79,142,247,0.12);
+  --red:#ef4444;--red-dim:rgba(239,68,68,0.1);
+  --yellow:#f59e0b;--yellow-dim:rgba(245,158,11,0.1);
+  --green:#10b981;--green-dim:rgba(16,185,129,0.1);
+  --text:#e2e8f0;--text-muted:#64748b;--text-dim:#94a3b8;
+  --mono:'JetBrains Mono',monospace;
+  --radius:10px;
+}
 *{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
-body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:60px 60px;opacity:.15;pointer-events:none;z-index:0;}
-header{position:relative;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:0 32px;height:65px;background:rgba(10,21,32,.95);border-bottom:1px solid var(--border);}
-.logo{display:flex;align-items:center;gap:12px;}
-.logo-icon{width:36px;height:36px;border:2px solid var(--teal);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:1rem;}
-.logo h1{font-family:'Rajdhani',sans-serif;font-size:1.25rem;letter-spacing:3px;color:#fff;}
-.logo h1 span{color:var(--teal);}
-.logo p{font-family:'Share Tech Mono',monospace;font-size:.56rem;color:var(--text-dim);letter-spacing:1.5px;}
-nav{display:flex;gap:8px;}
-nav a{font-family:'Share Tech Mono',monospace;font-size:.7rem;color:var(--text-dim);text-decoration:none;padding:6px 12px;border-radius:6px;border:1px solid transparent;transition:all .2s;}
-nav a:hover,nav a.active{border-color:var(--teal);color:var(--teal);background:var(--teal-glow);}
-.status{display:flex;align-items:center;gap:6px;font-family:'Share Tech Mono',monospace;font-size:.68rem;color:var(--green);}
-.status::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);animation:blink 2s infinite;}
-@keyframes blink{0%,100%{opacity:1;}50%{opacity:.3;}}
-main{position:relative;z-index:5;max-width:1200px;margin:0 auto;padding:32px 24px 60px;}
-.page-title{font-family:'Rajdhani',sans-serif;font-size:1.8rem;font-weight:700;color:#fff;margin-bottom:24px;}
-.page-title span{color:var(--teal);}
-.kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:28px;}
-.kpi{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:16px 14px;text-align:center;}
-.kpi .n{font-family:'Rajdhani',sans-serif;font-size:1.8rem;font-weight:700;}
-.kpi .l{font-family:'Share Tech Mono',monospace;font-size:.6rem;color:var(--text-dim);margin-top:3px;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;}
+/* SIDEBAR */
+.sidebar{width:240px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;position:fixed;height:100vh;z-index:100;}
+.sidebar-logo{padding:24px 20px;border-bottom:1px solid var(--border);}
+.sidebar-logo h1{font-size:1.3rem;font-weight:700;color:#fff;letter-spacing:1px;}
+.sidebar-logo h1 span{color:var(--primary);}
+.sidebar-logo p{font-size:.65rem;color:var(--text-muted);margin-top:3px;font-family:var(--mono);}
+.sidebar-user{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
+.user-avatar{width:34px;height:34px;border-radius:8px;background:var(--primary-dim);border:1px solid var(--primary);display:flex;align-items:center;justify-content:center;font-size:.9rem;color:var(--primary);font-weight:700;}
+.user-info .name{font-size:.82rem;font-weight:600;color:var(--text);}
+.user-info .role{font-size:.65rem;color:var(--text-muted);font-family:var(--mono);}
+nav{flex:1;padding:12px 0;overflow-y:auto;}
+.nav-section{padding:8px 20px 4px;font-size:.6rem;font-weight:600;color:var(--text-muted);letter-spacing:1.5px;text-transform:uppercase;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 20px;font-size:.82rem;color:var(--text-muted);text-decoration:none;transition:all .15s;cursor:pointer;border:none;background:none;width:100%;text-align:left;}
+.nav-item:hover{background:var(--surface2);color:var(--text);}
+.nav-item.active{background:var(--primary-dim);color:var(--primary);border-right:2px solid var(--primary);}
+.nav-item .icon{width:18px;text-align:center;font-size:.9rem;}
+.nav-logout{color:var(--red)!important;}
+.nav-logout:hover{background:var(--red-dim)!important;}
+/* MAIN */
+.main{margin-left:240px;flex:1;display:flex;flex-direction:column;min-height:100vh;}
+.topbar{padding:16px 32px;border-bottom:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:space-between;}
+.page-title{font-size:1.1rem;font-weight:600;color:var(--text);}
+.page-sub{font-size:.75rem;color:var(--text-muted);margin-top:2px;}
+.topbar-right{display:flex;align-items:center;gap:12px;}
+.badge-live{display:flex;align-items:center;gap:6px;font-size:.72rem;color:var(--green);font-family:var(--mono);}
+.badge-live::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+.content{padding:28px 32px;flex:1;}
+/* TABS */
+.tab-bar{display:flex;gap:4px;margin-bottom:24px;background:var(--surface);padding:4px;border-radius:var(--radius);border:1px solid var(--border);width:fit-content;}
+.tab{padding:7px 16px;border-radius:7px;font-size:.8rem;font-weight:500;cursor:pointer;border:none;background:transparent;color:var(--text-muted);transition:all .15s;}
+.tab.active{background:var(--primary);color:#fff;}
+.tab:hover:not(.active){background:var(--surface2);color:var(--text);}
+.tab-content{display:none;}
+.tab-content.active{display:block;}
+/* KPIs */
+.kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;margin-bottom:24px;}
+.kpi{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;}
+.kpi .n{font-size:1.6rem;font-weight:700;font-family:var(--mono);}
+.kpi .l{font-size:.7rem;color:var(--text-muted);margin-top:4px;}
+.kpi.blue .n{color:var(--primary);}
 .kpi.red .n{color:var(--red);}
-.kpi.grn .n{color:var(--green);}
-.kpi.yel .n{color:var(--yellow);}
-.kpi.tel .n{color:var(--teal);}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px;}
-.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;margin-bottom:24px;}
-.card{background:var(--panel);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
-.card-head{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border);background:rgba(0,0,0,.2);}
-.card-title{font-family:'Share Tech Mono',monospace;font-size:.7rem;color:var(--teal);letter-spacing:2px;}
+.kpi.green .n{color:var(--green);}
+.kpi.yellow .n{color:var(--yellow);}
+/* CARDS */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:18px;}
+.card-head{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.card-title{font-size:.78rem;font-weight:600;color:var(--text);}
+.card-sub{font-size:.68rem;color:var(--text-muted);}
 .card-body{padding:18px;}
-.chart-bars{display:flex;align-items:flex-end;gap:8px;height:120px;padding:0 4px;}
-.bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;}
-.bar{width:100%;background:rgba(0,212,255,.25);border-radius:4px 4px 0 0;border:1px solid rgba(0,212,255,.4);transition:height .5s;min-height:4px;}
-.bar-lbl{font-family:'Share Tech Mono',monospace;font-size:.58rem;color:var(--text-dim);}
-.bar-val{font-family:'Share Tech Mono',monospace;font-size:.62rem;color:var(--teal);}
-.pie-wrap{display:flex;align-items:center;justify-content:center;gap:24px;padding:10px;}
-canvas{border-radius:50%;}
-.pie-legend{display:flex;flex-direction:column;gap:10px;}
-.legend-item{display:flex;align-items:center;gap:8px;font-family:'Share Tech Mono',monospace;font-size:.7rem;}
-.legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+/* CHART */
+.chart-bars{display:flex;align-items:flex-end;gap:8px;height:100px;}
+.bar-w{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;}
+.bar{width:100%;background:var(--primary-dim);border:1px solid rgba(79,142,247,.4);border-radius:4px 4px 0 0;min-height:4px;transition:height .5s;}
+.bar-lbl{font-family:var(--mono);font-size:.55rem;color:var(--text-muted);}
+.bar-val{font-family:var(--mono);font-size:.6rem;color:var(--primary);}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+/* TABLE */
 table{width:100%;border-collapse:collapse;}
-thead tr{background:rgba(0,0,0,.3);}
-th{font-family:'Share Tech Mono',monospace;font-size:.62rem;color:var(--text-dim);letter-spacing:1px;padding:10px 12px;text-align:left;border-bottom:1px solid var(--border);}
-td{font-size:.8rem;padding:10px 12px;border-bottom:1px solid rgba(26,58,85,.4);font-family:'Share Tech Mono',monospace;color:var(--text-dim);}
+th{font-size:.68rem;font-weight:600;color:var(--text-muted);padding:10px 14px;text-align:left;border-bottom:1px solid var(--border);text-transform:uppercase;letter-spacing:.5px;}
+td{font-size:.78rem;padding:10px 14px;border-bottom:1px solid rgba(45,51,72,.5);color:var(--text-dim);font-family:var(--mono);}
+td.main-col{font-family:'Inter',sans-serif;color:var(--text);}
+tr:hover td{background:rgba(79,142,247,.03);}
 tr:last-child td{border-bottom:none;}
-.badge{display:inline-block;padding:2px 10px;border-radius:20px;font-size:.65rem;font-family:'Share Tech Mono',monospace;font-weight:700;}
-.badge.ph{background:var(--red-glow);border:1px solid rgba(255,64,96,.3);color:var(--red);}
-.badge.su{background:rgba(255,184,0,.1);border:1px solid rgba(255,184,0,.3);color:var(--yellow);}
-.badge.le,.badge.wh{background:var(--green-glow);border:1px solid rgba(0,230,118,.3);color:var(--green);}
-.list-form{display:flex;gap:8px;margin-bottom:14px;}
-.list-form input{flex:1;background:var(--bg2);border:1px solid var(--border);border-radius:7px;padding:9px 14px;color:var(--text);font-family:'Share Tech Mono',monospace;font-size:.76rem;outline:none;transition:border-color .2s;}
-.list-form input:focus{border-color:var(--teal);}
-.list-form input::placeholder{color:var(--text-dim);}
-.btn-add{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.85rem;padding:9px 18px;border-radius:7px;border:none;cursor:pointer;white-space:nowrap;}
-.btn-add.wl{background:var(--green);color:var(--bg);}
-.btn-add.bl{background:var(--red);color:#fff;}
-.list-items{max-height:200px;overflow-y:auto;}
-.list-item{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-radius:7px;margin-bottom:6px;font-family:'Share Tech Mono',monospace;font-size:.74rem;}
-.list-item.wl-item{background:var(--green-glow);border:1px solid rgba(0,230,118,.18);color:#66ffb2;}
-.list-item.bl-item{background:var(--red-glow);border:1px solid rgba(255,64,96,.22);color:#ff8099;}
-.del-btn{background:transparent;border:none;cursor:pointer;font-size:.8rem;opacity:.5;transition:opacity .2s;}
-.del-btn:hover{opacity:1;}
-.empty{font-family:'Share Tech Mono',monospace;font-size:.7rem;color:var(--text-dim);text-align:center;padding:20px;opacity:.6;}
-footer{text-align:center;padding:20px;border-top:1px solid var(--border);font-family:'Share Tech Mono',monospace;font-size:.6rem;color:var(--text-dim);letter-spacing:1px;position:relative;z-index:5;}
-@media(max-width:900px){.kpis{grid-template-columns:repeat(3,1fr);}.grid2,.grid3{grid-template-columns:1fr;}}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:2px 9px;border-radius:20px;font-size:.65rem;font-weight:600;font-family:var(--mono);}
+.badge.ph{background:var(--red-dim);color:var(--red);border:1px solid rgba(239,68,68,.2);}
+.badge.su{background:var(--yellow-dim);color:var(--yellow);border:1px solid rgba(245,158,11,.2);}
+.badge.le,.badge.wh{background:var(--green-dim);color:var(--green);border:1px solid rgba(16,185,129,.2);}
+.badge.admin{background:var(--primary-dim);color:var(--primary);border:1px solid rgba(79,142,247,.2);}
+.badge.user{background:var(--surface2);color:var(--text-muted);border:1px solid var(--border);}
+/* FORMS */
+.form-row{display:flex;gap:8px;margin-bottom:14px;}
+.form-input{flex:1;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 12px;color:var(--text);font-size:.8rem;outline:none;transition:border-color .2s;font-family:'Inter',sans-serif;}
+.form-input:focus{border-color:var(--primary);}
+.form-input::placeholder{color:var(--text-muted);}
+.form-select{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 12px;color:var(--text);font-size:.8rem;outline:none;cursor:pointer;}
+.btn{font-family:'Inter',sans-serif;font-weight:600;font-size:.78rem;padding:8px 16px;border-radius:7px;border:none;cursor:pointer;transition:all .15s;white-space:nowrap;}
+.btn-primary{background:var(--primary);color:#fff;}
+.btn-primary:hover{background:#3b7de8;}
+.btn-danger{background:var(--red-dim);color:var(--red);border:1px solid rgba(239,68,68,.2);}
+.btn-danger:hover{background:var(--red);color:#fff;}
+.btn-green{background:var(--green-dim);color:var(--green);border:1px solid rgba(16,185,129,.2);}
+.btn-green:hover{background:var(--green);color:#fff;}
+.btn-sm{padding:5px 10px;font-size:.72rem;}
+/* LIST */
+.list-wrap{max-height:220px;overflow-y:auto;}
+.list-item{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-radius:7px;margin-bottom:5px;font-size:.78rem;}
+.list-item.wl{background:var(--green-dim);border:1px solid rgba(16,185,129,.15);color:var(--green);}
+.list-item.bl{background:var(--red-dim);border:1px solid rgba(239,68,68,.15);color:var(--red);}
+.list-item span{font-family:var(--mono);}
+.empty{text-align:center;padding:20px;color:var(--text-muted);font-size:.78rem;}
+/* PIE */
+.pie-wrap{display:flex;align-items:center;justify-content:center;gap:28px;padding:8px;}
+.pie-legend{display:flex;flex-direction:column;gap:10px;}
+.legend-row{display:flex;align-items:center;gap:8px;font-size:.75rem;}
+.legend-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+/* TOAST */
+.toast{position:fixed;bottom:24px;right:24px;padding:12px 20px;border-radius:8px;font-size:.82rem;z-index:9999;display:none;animation:slideIn .3s ease;}
+@keyframes slideIn{from{transform:translateY(20px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+.toast.success{background:#10b981;color:#fff;}
+.toast.error{background:#ef4444;color:#fff;}
 </style>
 </head>
 <body>
-<header>
-  <div class="logo"><div class="logo-icon">&#128737;</div><div><h1>AI<span>PDA</span></h1><p>AI-Powered Phishing Detection</p></div></div>
-  <nav><a href="/">&#128269; Scanner</a><a href="/dashboard" class="active">&#128202; Dashboard</a></nav>
-  <div class="status">ONLINE</div>
-</header>
-<main>
-  <div class="page-title">Security <span>Dashboard</span></div>
 
-  <!-- KPIs -->
-  <div class="kpis">
-    <div class="kpi tel"><div class="n">{{stats.total}}</div><div class="l">TOTAL SCANS</div></div>
-    <div class="kpi red"><div class="n">{{stats.phishing}}</div><div class="l">PHISHING</div></div>
-    <div class="kpi yel"><div class="n">{{stats.suspicious}}</div><div class="l">SUSPICIOUS</div></div>
-    <div class="kpi grn"><div class="n">{{stats.legitimate}}</div><div class="l">LEGITIMATE</div></div>
-    <div class="kpi grn"><div class="n">{{stats.whitelist}}</div><div class="l">WHITELIST</div></div>
-    <div class="kpi red"><div class="n">{{stats.blacklist}}</div><div class="l">BLACKLIST</div></div>
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <h1>AI<span>PDA</span></h1>
+    <p>ENTERPRISE SECURITY PORTAL</p>
+  </div>
+  <div class="sidebar-user">
+    <div class="user-avatar">A</div>
+    <div class="user-info">
+      <div class="name">{{admin_username or 'Admin'}}</div>
+      <div class="role">ADMINISTRATOR</div>
+    </div>
+  </div>
+  <nav>
+    <div class="nav-section">Main</div>
+    <button class="nav-item active" onclick="showTab('overview')"><span class="icon">📊</span> Overview</button>
+    <button class="nav-item" onclick="showTab('scans')"><span class="icon">🔍</span> Scan History</button>
+    <div class="nav-section">Management</div>
+    <button class="nav-item" onclick="showTab('users')"><span class="icon">👥</span> Users</button>
+    <button class="nav-item" onclick="showTab('lists')"><span class="icon">🛡️</span> White/Blacklist</button>
+    <div class="nav-section">Reports</div>
+    <a class="nav-item" href="/admin/report" target="_blank"><span class="icon">📄</span> Full Report</a>
+    <a class="nav-item" href="/" target="_blank"><span class="icon">🌐</span> Portal</a>
+    <div style="flex:1"></div>
+    <a class="nav-item nav-logout" href="/logout"><span class="icon">🚪</span> Logout</a>
+  </nav>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div>
+      <div class="page-title" id="pageTitle">Overview</div>
+      <div class="page-sub" id="pageSub">System statistics and threat analysis</div>
+    </div>
+    <div class="topbar-right">
+      <div class="badge-live">SYSTEM LIVE</div>
+    </div>
   </div>
 
-  <!-- Charts Row -->
-  <div class="grid2">
-    <!-- Bar Chart -->
-    <div class="card">
-      <div class="card-head"><span class="card-title">// PHISHING DETECTIONS - LAST 7 DAYS</span></div>
-      <div class="card-body">
-        <div class="chart-bars" id="barChart"></div>
+  <div class="content">
+
+    <!-- ===== OVERVIEW TAB ===== -->
+    <div class="tab-content active" id="tab-overview">
+      <div class="kpis">
+        <div class="kpi blue"><div class="n">{{stats.total}}</div><div class="l">Total Scans</div></div>
+        <div class="kpi red"><div class="n">{{stats.phishing}}</div><div class="l">Phishing</div></div>
+        <div class="kpi yellow"><div class="n">{{stats.suspicious}}</div><div class="l">Suspicious</div></div>
+        <div class="kpi green"><div class="n">{{stats.legitimate}}</div><div class="l">Legitimate</div></div>
+        <div class="kpi blue"><div class="n">{{stats.users}}</div><div class="l">Users</div></div>
+        <div class="kpi red"><div class="n">{{stats.blacklist}}</div><div class="l">Blacklisted</div></div>
+      </div>
+      <div class="grid2">
+        <div class="card">
+          <div class="card-head"><span class="card-title">Phishing Detections — Last 7 Days</span></div>
+          <div class="card-body"><div class="chart-bars" id="barChart"></div></div>
+        </div>
+        <div class="card">
+          <div class="card-head"><span class="card-title">Verdict Distribution</span></div>
+          <div class="card-body">
+            <div class="pie-wrap">
+              <canvas id="pieChart" width="120" height="120"></canvas>
+              <div class="pie-legend">
+                <div class="legend-row"><div class="legend-dot" style="background:#ef4444"></div><span style="color:#ef4444">Phishing: {{stats.phishing}}</span></div>
+                <div class="legend-row"><div class="legend-dot" style="background:#f59e0b"></div><span style="color:#f59e0b">Suspicious: {{stats.suspicious}}</span></div>
+                <div class="legend-row"><div class="legend-dot" style="background:#10b981"></div><span style="color:#10b981">Legitimate: {{stats.legitimate}}</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Recent -->
+      <div class="card">
+        <div class="card-head"><span class="card-title">Recent Scans</span><span class="card-sub">Last 10</span></div>
+        <table>
+          <thead><tr><th>User</th><th>Input</th><th>Verdict</th><th>Method</th><th>Time</th></tr></thead>
+          <tbody>
+            {% for s in recent[:10] %}
+            <tr>
+              <td style="color:var(--primary);">{{s.username}}</td>
+              <td class="main-col" style="max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{s.input[:55]}}{% if s.input|length>55 %}...{% endif %}</td>
+              <td><span class="badge {{s.verdict[:2].lower()}}">{{s.verdict}}</span></td>
+              <td>{{s.method}}</td>
+              <td>{{s.timestamp[-8:]}}</td>
+            </tr>
+            {% else %}<tr><td colspan="5" class="empty">No scans yet</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
       </div>
     </div>
-    <!-- Pie Chart -->
-    <div class="card">
-      <div class="card-head"><span class="card-title">// VERDICT DISTRIBUTION</span></div>
-      <div class="card-body">
-        <div class="pie-wrap">
-          <canvas id="pieChart" width="140" height="140"></canvas>
-          <div class="pie-legend">
-            <div class="legend-item"><div class="legend-dot" style="background:#ff4060"></div><span style="color:#ff4060">Phishing: {{stats.phishing}}</span></div>
-            <div class="legend-item"><div class="legend-dot" style="background:#ffb800"></div><span style="color:#ffb800">Suspicious: {{stats.suspicious}}</span></div>
-            <div class="legend-item"><div class="legend-dot" style="background:#00e676"></div><span style="color:#00e676">Legitimate: {{stats.legitimate}}</span></div>
+
+    <!-- ===== SCANS TAB ===== -->
+    <div class="tab-content" id="tab-scans">
+      <div class="card">
+        <div class="card-head"><span class="card-title">All Scan History</span><span class="card-sub">{{recent|length}} records</span></div>
+        <table>
+          <thead><tr><th>#</th><th>User</th><th>Input</th><th>Verdict</th><th>Method</th><th>IP</th><th>Time</th></tr></thead>
+          <tbody>
+            {% for s in recent %}
+            <tr>
+              <td>{{s.id}}</td>
+              <td style="color:var(--primary);">{{s.username}}</td>
+              <td class="main-col" style="max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{s.input[:50]}}{% if s.input|length>50 %}...{% endif %}</td>
+              <td><span class="badge {{s.verdict[:2].lower()}}">{{s.verdict}}</span></td>
+              <td>{{s.method}}</td>
+              <td>{{s.ip}}</td>
+              <td>{{s.timestamp[-8:]}}</td>
+            </tr>
+            {% else %}<tr><td colspan="7" class="empty">No scans yet</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ===== USERS TAB ===== -->
+    <div class="tab-content" id="tab-users">
+      <div class="card">
+        <div class="card-head"><span class="card-title">Add New User</span></div>
+        <div class="card-body">
+          <div class="form-row">
+            <input class="form-input" type="text" id="newUser" placeholder="Username">
+            <input class="form-input" type="password" id="newPass" placeholder="Password (min 6 chars)">
+            <select class="form-select" id="newRole">
+              <option value="user">User</option>
+              <option value="admin">Admin</option>
+            </select>
+            <button class="btn btn-primary" onclick="addUser()">+ Add User</button>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-head"><span class="card-title">All Users</span><span class="card-sub">{{users|length}} total</span></div>
+        <table>
+          <thead><tr><th>#</th><th>Username</th><th>Role</th><th>Created</th><th>Action</th></tr></thead>
+          <tbody id="userTable">
+            {% for u in users %}
+            <tr id="user-row-{{u.id}}">
+              <td>{{u.id}}</td>
+              <td class="main-col">{{u.username}}</td>
+              <td><span class="badge {{u.role}}">{{u.role.upper()}}</span></td>
+              <td>{{u.created_at[:10]}}</td>
+              <td>
+                {% if u.username != 'admin' %}
+                <button class="btn btn-danger btn-sm" onclick="deleteUser({{u.id}}, '{{u.username}}')">Delete</button>
+                {% else %}
+                <span style="color:var(--text-muted);font-size:.72rem;">Protected</span>
+                {% endif %}
+              </td>
+            </tr>
+            {% else %}<tr><td colspan="5" class="empty">No users</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ===== LISTS TAB ===== -->
+    <div class="tab-content" id="tab-lists">
+      <div class="grid2">
+        <div class="card">
+          <div class="card-head"><span class="card-title">✅ Whitelist — Trusted Domains</span></div>
+          <div class="card-body">
+            <div class="form-row">
+              <input class="form-input" type="text" id="wlInput" placeholder="Enter trusted URL or domain...">
+              <button class="btn btn-green" onclick="addToList('whitelist')">+ Add</button>
+            </div>
+            <div class="list-wrap" id="wlList">
+              {% for item in wl %}
+              <div class="list-item wl" id="wl-{{item.id}}">
+                <span>🔒 {{item.url}}</span>
+                <button class="btn btn-sm" style="background:transparent;color:var(--green);border:none;" onclick="delItem('whitelist',{{item.id}})">✕</button>
+              </div>
+              {% else %}<div class="empty">No trusted domains yet</div>{% endfor %}
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><span class="card-title">🚫 Blacklist — Blocked Domains</span></div>
+          <div class="card-body">
+            <div class="form-row">
+              <input class="form-input" type="text" id="blInput" placeholder="Enter phishing URL or domain...">
+              <button class="btn btn-danger" onclick="addToList('blacklist')">+ Block</button>
+            </div>
+            <div class="list-wrap" id="blList">
+              {% for item in bl %}
+              <div class="list-item bl" id="bl-{{item.id}}">
+                <span>🚫 {{item.url}}</span>
+                <button class="btn btn-sm" style="background:transparent;color:var(--red);border:none;" onclick="delItem('blacklist',{{item.id}})">✕</button>
+              </div>
+              {% else %}<div class="empty">No blocked domains yet</div>{% endfor %}
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- Whitelist / Blacklist -->
-  <div class="grid2" style="margin-bottom:24px;">
-    <!-- Whitelist -->
-    <div class="card">
-      <div class="card-head"><span class="card-title">// WHITELIST — TRUSTED DOMAINS</span></div>
-      <div class="card-body">
-        <div class="list-form">
-          <input type="text" id="wlInput" placeholder="Enter trusted URL or domain...">
-          <button class="btn-add wl" onclick="addToList('whitelist')">+ Add</button>
-        </div>
-        <div class="list-items" id="wlList">
-          {% for item in wl %}
-          <div class="list-item wl-item" id="wl-{{item.id}}">
-            <span>&#128274; {{item.url}}</span>
-            <button class="del-btn" onclick="delItem('whitelist', {{item.id}})">&#10005;</button>
-          </div>
-          {% else %}
-          <div class="empty">No trusted domains yet</div>
-          {% endfor %}
-        </div>
-      </div>
-    </div>
-    <!-- Blacklist -->
-    <div class="card">
-      <div class="card-head"><span class="card-title">// BLACKLIST — BLOCKED DOMAINS</span></div>
-      <div class="card-body">
-        <div class="list-form">
-          <input type="text" id="blInput" placeholder="Enter phishing URL or domain...">
-          <button class="btn-add bl" onclick="addToList('blacklist')">+ Block</button>
-        </div>
-        <div class="list-items" id="blList">
-          {% for item in bl %}
-          <div class="list-item bl-item" id="bl-{{item.id}}">
-            <span>&#128683; {{item.url}}</span>
-            <button class="del-btn" onclick="delItem('blacklist', {{item.id}})">&#10005;</button>
-          </div>
-          {% else %}
-          <div class="empty">No blocked domains yet</div>
-          {% endfor %}
-        </div>
-      </div>
-    </div>
   </div>
+</div>
 
-  <!-- Recent Scans -->
-  <div class="card">
-    <div class="card-head"><span class="card-title">// RECENT SCAN HISTORY</span></div>
-    <div class="card-body" style="padding:0;">
-      <table>
-        <thead><tr><th>#</th><th>INPUT</th><th>VERDICT</th><th>METHOD</th><th>IP</th><th>TIME</th></tr></thead>
-        <tbody>
-          {% for s in recent %}
-          <tr>
-            <td>{{s.id}}</td>
-            <td style="max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text);">{{s.input[:60]}}{% if s.input|length > 60 %}...{% endif %}</td>
-            <td><span class="badge {{s.verdict[:2].lower()}}">{{s.verdict}}</span></td>
-            <td>{{s.method}}</td>
-            <td>{{s.ip}}</td>
-            <td>{{s.timestamp[-8:]}}</td>
-          </tr>
-          {% else %}
-          <tr><td colspan="6" style="text-align:center;opacity:.5;">No scans yet — go to Scanner to start</td></tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
-  </div>
-</main>
-<footer>AIPDA &middot; SECURITY DASHBOARD &middot; v2.0</footer>
+<div class="toast" id="toast"></div>
 
 <script>
-// Bar Chart
+// ---- TABS ----
+var titles = {
+  overview: ['Overview','System statistics and threat analysis'],
+  scans: ['Scan History','All recorded scans'],
+  users: ['User Management','Add, view and manage users'],
+  lists: ['White / Blacklist','Manage trusted and blocked domains']
+};
+function showTab(t) {
+  document.querySelectorAll('.tab-content').forEach(function(el){el.classList.remove('active');});
+  document.getElementById('tab-'+t).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(function(el){el.classList.remove('active');});
+  event.currentTarget.classList.add('active');
+  document.getElementById('pageTitle').textContent = titles[t][0];
+  document.getElementById('pageSub').textContent = titles[t][1];
+}
+
+// ---- CHARTS ----
 var chartData = {{stats.chart | tojson}};
 var maxVal = Math.max.apply(null, chartData.map(function(d){return d.count;})) || 1;
-var barHtml = chartData.map(function(d){
-  var h = Math.max(4, Math.round((d.count / maxVal) * 100));
-  return '<div class="bar-wrap"><div class="bar-val">'+(d.count||'')+'</div><div class="bar" style="height:'+h+'px"></div><div class="bar-lbl">'+d.date+'</div></div>';
+document.getElementById('barChart').innerHTML = chartData.map(function(d){
+  var h = Math.max(4, Math.round((d.count/maxVal)*90));
+  return '<div class="bar-w"><div class="bar-val">'+(d.count||'')+'</div><div class="bar" style="height:'+h+'px"></div><div class="bar-lbl">'+d.date+'</div></div>';
 }).join('');
-document.getElementById('barChart').innerHTML = barHtml;
 
-// Pie Chart
 var canvas = document.getElementById('pieChart');
 var ctx = canvas.getContext('2d');
-var ph = {{stats.phishing}}, su = {{stats.suspicious}}, le = {{stats.legitimate}};
-var total = ph + su + le || 1;
-var slices = [{v:ph,c:'#ff4060'},{v:su,c:'#ffb800'},{v:le,c:'#00e676'}];
+var ph={{stats.phishing}}, su={{stats.suspicious}}, le={{stats.legitimate}};
+var total = ph+su+le || 1;
 var start = -Math.PI/2;
-slices.forEach(function(s){
-  var angle = (s.v/total) * 2 * Math.PI;
-  ctx.beginPath();ctx.moveTo(70,70);ctx.arc(70,70,65,start,start+angle);
-  ctx.closePath();ctx.fillStyle=s.c;ctx.fill();
-  start += angle;
+[{v:ph,c:'#ef4444'},{v:su,c:'#f59e0b'},{v:le,c:'#10b981'}].forEach(function(s){
+  var angle=(s.v/total)*2*Math.PI;
+  ctx.beginPath();ctx.moveTo(60,60);ctx.arc(60,60,55,start,start+angle);
+  ctx.closePath();ctx.fillStyle=s.c;ctx.fill();start+=angle;
 });
-ctx.beginPath();ctx.arc(70,70,30,0,2*Math.PI);ctx.fillStyle='#0f2235';ctx.fill();
+ctx.beginPath();ctx.arc(60,60,22,0,2*Math.PI);ctx.fillStyle='#1a1d27';ctx.fill();
 
-// Add to list
-function addToList(type){
-  var inp = document.getElementById(type=='whitelist'?'wlInput':'blInput');
+// ---- TOAST ----
+function showToast(msg, type) {
+  var t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'toast '+type; t.style.display='block';
+  setTimeout(function(){t.style.display='none';}, 3000);
+}
+
+// ---- USERS ----
+async function addUser() {
+  var u = document.getElementById('newUser').value.trim();
+  var p = document.getElementById('newPass').value.trim();
+  var r = document.getElementById('newRole').value;
+  if(!u||!p){showToast('Please fill all fields','error');return;}
+  var res = await fetch('/admin/users/add',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u,password:p,role:r})});
+  var d = await res.json();
+  if(d.success){
+    showToast(u+' added successfully','success');
+    document.getElementById('newUser').value='';
+    document.getElementById('newPass').value='';
+    setTimeout(function(){location.reload();},1000);
+  } else { showToast(d.error||'Error','error'); }
+}
+
+async function deleteUser(id, name) {
+  if(!confirm('Delete user "'+name+'"?')) return;
+  var res = await fetch('/admin/users/delete/'+id,{method:'DELETE'});
+  var d = await res.json();
+  if(d.success){
+    document.getElementById('user-row-'+id).remove();
+    showToast(name+' deleted','success');
+  } else { showToast(d.error||'Error','error'); }
+}
+
+// ---- LISTS ----
+async function addToList(type) {
+  var inp = document.getElementById(type==='whitelist'?'wlInput':'blInput');
   var url = inp.value.trim();
-  if(!url){alert('Please enter a URL');return;}
-  fetch('/admin/'+type+'/add',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({url:url})})
-  .then(r=>r.json()).then(function(d){
-    if(d.success){inp.value='';location.reload();}
-    else{alert(d.error||'Error');}
-  });
+  if(!url){showToast('Please enter a URL','error');return;}
+  var res = await fetch('/admin/'+type+'/add',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({url:url})});
+  var d = await res.json();
+  if(d.success){showToast(url+' added','success');inp.value='';setTimeout(function(){location.reload();},800);}
+  else{showToast(d.error||'Already exists','error');}
 }
 
-// Delete from list
-function delItem(type, id){
-  if(!confirm('Remove this entry?'))return;
-  fetch('/admin/'+type+'/delete/'+id,{method:'DELETE'})
-  .then(r=>r.json()).then(function(d){
-    if(d.success){var el=document.getElementById(type[0]+'l-'+id);if(el)el.remove();}
-  });
+async function delItem(type, id) {
+  var res = await fetch('/admin/'+type+'/delete/'+id,{method:'DELETE'});
+  var d = await res.json();
+  if(d.success){
+    var el = document.getElementById((type==='whitelist'?'wl':'bl')+'-'+id);
+    if(el) el.remove();
+    showToast('Removed','success');
+  }
 }
 
-// Enter key for inputs
+// Enter key
 ['wlInput','blInput'].forEach(function(id){
-  document.getElementById(id).addEventListener('keydown',function(e){
-    if(e.key==='Enter'){addToList(id==='wlInput'?'whitelist':'blacklist');}
-  });
+  var el = document.getElementById(id);
+  if(el) el.addEventListener('keydown',function(e){if(e.key==='Enter')addToList(id==='wlInput'?'whitelist':'blacklist');});
 });
+document.getElementById('newUser').addEventListener('keydown',function(e){if(e.key==='Enter')addUser();});
 </script>
 </body>
 </html>
