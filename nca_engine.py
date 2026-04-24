@@ -16,7 +16,7 @@ import urllib.parse
 NCA_OFFICIAL_DOMAINS = {
 
     # ===== الجهات الحكومية =====
-    "gov.sa", "nca.gov.sa", "moi.gov.sa", "mol.gov.sa",
+    "nca.gov.sa", "moi.gov.sa", "mol.gov.sa",
     "moh.gov.sa", "moe.gov.sa", "mcit.gov.sa", "my.gov.sa",
     "zatca.gov.sa", "sama.gov.sa", "cma.org.sa", "sdaia.gov.sa",
     "vision2030.gov.sa", "spa.gov.sa", "saudiembassy.net",
@@ -184,29 +184,23 @@ def extract_domain(text):
 def is_nca_official(text):
     """
     التحقق إذا الرابط من جهة رسمية معتمدة من NCA
-    هذا يتجاوز الـ Whitelist والـ Blacklist
-    لا يمكن للأدمن تغيير هذا
+    مطابقة تامة فقط - أي حرف زيادة = مو رسمي
     """
     domain = extract_domain(text)
     if not domain:
         return False, None
 
-    # تحقق مباشر
+    # مطابقة تامة للدومين
     if domain in NCA_OFFICIAL_DOMAINS:
         return True, domain
 
-    # تحقق من subdomain
-    for official in NCA_OFFICIAL_DOMAINS:
-        if domain.endswith('.' + official):
-            return True, official
-
-    # تحقق من .gov.sa
-    if domain.endswith('.gov.sa'):
-        return True, domain
-
-    # تحقق من .edu.sa
-    if domain.endswith('.edu.sa'):
-        return True, domain
+    # subdomain رسمي فقط - portal.zatca.gov.sa مثلاً
+    # الشرط: الجزء الأساسي لازم يكون في القائمة بالضبط
+    parts = domain.split('.')
+    for i in range(1, len(parts)):
+        parent = '.'.join(parts[i:])
+        if parent in NCA_OFFICIAL_DOMAINS:
+            return True, parent
 
     return False, None
 
@@ -280,4 +274,4 @@ def get_nca_stats():
         "phishing_patterns": len(NCA_PHISHING_PATTERNS),
         "categories": ["ECC-1 Gov", "ECC-2 Banking", "ECC-3 E-commerce",
                        "ECC-4 Domains", "ECC-5 Social Engineering"]
-        }
+    }
