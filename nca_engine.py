@@ -280,4 +280,4 @@ def get_nca_stats():
         "phishing_patterns": len(NCA_PHISHING_PATTERNS),
         "categories": ["ECC-1 Gov", "ECC-2 Banking", "ECC-3 E-commerce",
                        "ECC-4 Domains", "ECC-5 Social Engineering"]
-    }
+        }
