@@ -4,6 +4,14 @@
 # =====================================================
 
 from flask import Flask, request, jsonify, render_template, redirect, session
+try:
+    from nca_engine import analyze_with_nca, is_nca_official, get_nca_stats
+    NCA_ENABLED = True
+except:
+    NCA_ENABLED = False
+    def analyze_with_nca(t): return {'nca_result':'UNKNOWN','verdict':None,'nca_flags':[],'method':None}
+    def is_nca_official(t): return False, None
+    def get_nca_stats(): return {}
 from functools import wraps
 import re, os, sqlite3, datetime, hashlib, urllib.parse
 
@@ -376,6 +384,40 @@ def analyze():
     username = session.get('username', 'guest')
     ip = request.remote_addr
 
+    # ── NCA CHECK (GROUND TRUTH — runs before everything) ──
+    # لا يمكن تجاوزها حتى لو الدومين في الـ Whitelist
+    if NCA_ENABLED:
+        nca = analyze_with_nca(user_input)
+
+        # NCA رسمي — موثوق تماماً
+        if nca['nca_result'] == 'OFFICIAL':
+            result = {
+                'verdict': 'LEGITIMATE',
+                'confidence': 'High',
+                'explanation': nca['explanation'],
+                'red_flags': [],
+                'safe_signals': ['NCA Verified Official Domain'],
+                'method': 'NCA Official Database'
+            }
+            save_scan(user_id,username,user_input,result['verdict'],
+                      result['confidence'],result['explanation'],result['method'],ip)
+            return jsonify(result)
+
+        # NCA تصيد — محجوب حتى لو في الـ Whitelist
+        if nca['nca_result'] == 'PHISHING':
+            result = {
+                'verdict': 'PHISHING',
+                'confidence': nca.get('confidence','High'),
+                'explanation': nca['explanation'],
+                'red_flags': nca.get('nca_flags',[]),
+                'safe_signals': [],
+                'method': nca.get('method','NCA Threat Intelligence')
+            }
+            save_scan(user_id,username,user_input,result['verdict'],
+                      result['confidence'],result['explanation'],result['method'],ip)
+            return jsonify(result)
+
+    # ── WHITELIST CHECK ──
     if check_whitelist(user_input):
         result = {"verdict":"WHITELISTED","confidence":"High",
                   "explanation":"This domain is in your organization's trusted whitelist.",
@@ -508,6 +550,12 @@ def del_blacklist(id):
     conn.execute('DELETE FROM blacklist WHERE id=?',(id,))
     conn.commit(); conn.close()
     return jsonify({"success":True})
+
+@app.route('/api/nca-stats')
+def api_nca_stats():
+    if NCA_ENABLED:
+        return jsonify(get_nca_stats())
+    return jsonify({'error': 'NCA engine not available'})
 
 @app.route('/api/stats')
 def api_stats():
