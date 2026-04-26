@@ -3,168 +3,192 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AIPDA — Admin Report</title>
-<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@600;700&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+<title>AIPDA — Forensic Security Report</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Space+Grotesk:wght@500;700&family=Inter:wght@300;400;500;600&family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
 <style>
-:root{--bg:#050a0f;--panel:#0f2235;--border:#1a3a55;--teal:#00d4ff;--teal-glow:rgba(0,212,255,0.15);--red:#ff4060;--red-glow:rgba(255,64,96,0.15);--yellow:#ffb800;--green:#00e676;--green-glow:rgba(0,230,118,0.15);--text:#c8dae8;--text-dim:#5a7a94;}
-*{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
-body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:60px 60px;opacity:.15;pointer-events:none;z-index:0;}
-header{position:relative;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:0 32px;height:65px;background:rgba(10,21,32,.95);border-bottom:1px solid var(--border);}
-.logo{display:flex;align-items:center;gap:12px;}
-.logo-icon{width:36px;height:36px;border:2px solid var(--teal);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:1rem;}
-.logo h1{font-family:'Rajdhani',sans-serif;font-size:1.25rem;letter-spacing:3px;color:#fff;}
-.logo h1 span{color:var(--teal);}
-.logo p{font-family:'Share Tech Mono',monospace;font-size:.56rem;color:var(--text-dim);letter-spacing:1.5px;}
-nav{display:flex;gap:8px;}
-nav a{font-family:'Share Tech Mono',monospace;font-size:.7rem;color:var(--text-dim);text-decoration:none;padding:6px 12px;border-radius:6px;border:1px solid transparent;transition:all .2s;}
-nav a:hover,nav a.active{border-color:var(--teal);color:var(--teal);background:var(--teal-glow);}
-main{position:relative;z-index:5;max-width:1100px;margin:0 auto;padding:32px 24px 60px;}
-.report-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;}
-.page-title{font-family:'Rajdhani',sans-serif;font-size:1.8rem;font-weight:700;color:#fff;}
-.page-title span{color:var(--teal);}
-.report-meta{font-family:'Share Tech Mono',monospace;font-size:.68rem;color:var(--text-dim);}
-.btn-print{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.85rem;letter-spacing:1px;padding:9px 20px;border-radius:7px;border:none;cursor:pointer;background:var(--teal);color:#050a0f;}
-.btn-print:hover{background:#33ddff;}
-.kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:28px;}
-.kpi{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center;}
-.kpi .n{font-family:'Rajdhani',sans-serif;font-size:1.8rem;font-weight:700;}
-.kpi .l{font-family:'Share Tech Mono',monospace;font-size:.6rem;color:var(--text-dim);margin-top:3px;}
-.kpi.tel .n{color:var(--teal);}
-.kpi.red .n{color:var(--red);}
-.kpi.grn .n{color:var(--green);}
-.kpi.yel .n{color:var(--yellow);}
-.card{background:var(--panel);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:20px;}
-.card-head{padding:14px 18px;border-bottom:1px solid var(--border);background:rgba(0,0,0,.2);}
-.card-title{font-family:'Share Tech Mono',monospace;font-size:.7rem;color:var(--teal);letter-spacing:2px;}
-table{width:100%;border-collapse:collapse;}
-th{font-family:'Share Tech Mono',monospace;font-size:.62rem;color:var(--text-dim);padding:10px 14px;text-align:left;border-bottom:1px solid var(--border);background:rgba(0,0,0,.2);}
-td{font-size:.8rem;padding:10px 14px;border-bottom:1px solid rgba(26,58,85,.4);font-family:'Share Tech Mono',monospace;color:var(--text-dim);}
-tr:last-child td{border-bottom:none;}
-.badge{display:inline-block;padding:2px 10px;border-radius:20px;font-size:.65rem;font-weight:700;}
-.badge.ph{background:var(--red-glow);border:1px solid rgba(255,64,96,.3);color:var(--red);}
-.badge.su{background:rgba(255,184,0,.1);border:1px solid rgba(255,184,0,.3);color:var(--yellow);}
-.badge.le,.badge.wh{background:var(--green-glow);border:1px solid rgba(0,230,118,.3);color:var(--green);}
-.summary-box{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:20px;}
-.summary-box h3{font-family:'Rajdhani',sans-serif;font-size:1.1rem;color:var(--teal);margin-bottom:14px;letter-spacing:1px;}
-.summary-box p{font-size:.88rem;color:var(--text-dim);line-height:1.8;}
-.summary-box p strong{color:var(--text);}
-footer{text-align:center;padding:20px;border-top:1px solid var(--border);font-family:'Share Tech Mono',monospace;font-size:.6rem;color:var(--text-dim);position:relative;z-index:5;}
-@media print{
-  body{background:#fff;color:#000;}
-  header,nav,.btn-print{display:none!important;}
-  body::before,body::after{display:none;}
-  .card,.kpi,.summary-box{border-color:#ddd;background:#f9f9f9;}
-  .card-title,.page-title,.kpi .n{color:#003366!important;}
-  .kpi .l,.report-meta,.summary-box p{color:#333!important;}
-  td,th{color:#000!important;}
+:root {
+  --bg: #050505; 
+  --cyan: #00f0ff; --cyan-dim: rgba(0, 240, 255, 0.1);
+  --red: #ff003c; --green: #00ff66;
+  --text: #f8fafc; --text-muted: #8b949e; --mono: 'Share Tech Mono', monospace;
 }
-@media(max-width:900px){.kpis{grid-template-columns:repeat(3,1fr);}}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Inter', sans-serif; background:var(--bg); color:var(--text); padding:40px; }
+
+/* REPORT CONTAINER (PAPER STYLE BUT CYBER) */
+.report-paper { 
+  max-width:900px; margin:0 auto; background:#0a0a0c; 
+  border:1px solid rgba(255,255,255,0.05); padding:60px; 
+  position:relative; overflow:hidden;
+  box-shadow:0 50px 100px rgba(0,0,0,0.8);
+}
+.report-paper::before {
+  content:'CONFIDENTIAL'; position:absolute; top:50%; left:50%; 
+  transform:translate(-50%, -50%) rotate(-45deg); font-size:8rem; 
+  color:rgba(255,255,255,0.02); font-weight:900; pointer-events:none; z-index:0;
+}
+
+.report-header { border-bottom:2px solid var(--cyan); padding-bottom:30px; margin-bottom:40px; display:flex; justify-content:space-between; align-items:flex-end; }
+.report-header h1 { font-family:'Space Grotesk',sans-serif; font-size:2rem; letter-spacing:4px; text-transform:uppercase; color:var(--cyan); }
+.report-header .id { font-family:var(--mono); color:var(--text-muted); font-size:.8rem; }
+
+.section { margin-bottom:40px; position:relative; z-index:1; }
+.section-title { 
+  font-family:'Space Grotesk',sans-serif; font-size:.9rem; font-weight:700; 
+  color:var(--cyan); margin-bottom:15px; border-left:4px solid var(--cyan); 
+  padding-left:12px; text-transform:uppercase; letter-spacing:2px;
+}
+
+.data-grid { display:grid; grid-template-columns: 1fr 1fr; gap:20px; }
+.data-item { background:rgba(255,255,255,0.02); padding:15px; border:1px solid rgba(255,255,255,0.05); }
+.data-item .label { font-family:var(--mono); font-size:.65rem; color:var(--text-muted); text-transform:uppercase; margin-bottom:5px; display:block; }
+.data-item .value { font-family:'Space Grotesk',sans-serif; font-size:1.1rem; font-weight:700; color:#fff; }
+
+.threat-table { width:100%; border-collapse:collapse; margin-top:10px; }
+.threat-table th { font-family:var(--mono); font-size:.7rem; color:var(--cyan); padding:12px; text-align:left; border-bottom:1px solid rgba(255,255,255,0.1); text-transform:uppercase; }
+.threat-table td { font-family:var(--mono); font-size:.75rem; padding:12px; border-bottom:1px solid rgba(255,255,255,0.05); }
+
+.verdict { display:inline-block; padding:4px 10px; border-radius:4px; font-weight:700; font-size:.65rem; }
+.verdict.phishing { background:rgba(255,0,60,0.1); color:var(--red); border:1px solid rgba(255,0,60,0.3); }
+.verdict.legitimate { background:rgba(0,255,102,0.1); color:var(--green); border:1px solid rgba(0,255,102,0.3); }
+
+/* ACTIONS */
+.actions { max-width:900px; margin:30px auto; display:flex; gap:20px; }
+.btn { 
+  flex:1; padding:15px; font-family:'Space Grotesk',sans-serif; font-weight:700; 
+  text-transform:uppercase; letter-spacing:2px; border:none; cursor:pointer; transition:all .3s;
+  clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+}
+.btn-print { background:var(--cyan); color:#000; }
+.btn-print:hover { background:#fff; box-shadow:0 0 20px var(--cyan); }
+.btn-back { background:rgba(255,255,255,0.05); color:#fff; text-decoration:none; text-align:center; }
+.btn-back:hover { background:rgba(255,255,255,0.1); }
+
+@media print {
+  body { background:#fff; padding:0; }
+  .report-paper { box-shadow:none; border:none; width:100%; max-width:none; background:#fff; color:#000; }
+  .actions, .noise-overlay { display:none; }
+  .report-header h1 { color:#000; }
+  .section-title { border-color:#000; color:#000; }
+}
+
 </style>
 </head>
 <body>
-<header>
-  <div class="logo"><div class="logo-icon">&#128737;</div><div><h1>AI<span>PDA</span></h1><p style="font-family:'Share Tech Mono',monospace;font-size:.56rem;color:#5a7a94;letter-spacing:1.5px;">AI-POWERED PHISHING DETECTION</p></div></div>
-  <nav>
-    <a href="/dashboard">&#8592; Dashboard</a>
-    <a href="/admin/report" class="active">&#128196; Report</a>
-    <a href="/logout" style="color:var(--red);border-color:rgba(255,64,96,.3);">&#9211; Logout</a>
-  </nav>
-</header>
-<main>
+
+<div class="actions">
+  <a href="/dashboard" class="btn btn-back"><i class="fa-solid fa-arrow-left"></i> BACK TO SOC</a>
+  <button class="btn btn-print" onclick="exportPDF()"><i class="fa-solid fa-file-pdf"></i> GENERATE PDF REPORT</button>
+</div>
+
+<div class="report-paper" id="reportContent">
   <div class="report-header">
     <div>
-      <div class="page-title">Security <span>Report</span></div>
-      <div class="report-meta">// Generated: {{report_date}} &nbsp;|&nbsp; AIPDA v3.0</div>
+      <h1>Forensic Analysis Report</h1>
+      <div class="id">REFERENCE_ID: AIPDA-{{ report_date|replace(" ","")|replace(":","") }}</div>
     </div>
-    <button class="btn-print" onclick="window.print()">&#128438; Print / Save PDF</button>
+    <div style="text-align:right;">
+      <div style="font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:1.5rem;">AIPDA SOC</div>
+      <div style="font-family:var(--mono); font-size:.7rem; color:var(--text-muted);">CLASSIFIED: LEVEL 4</div>
+    </div>
   </div>
 
-  <!-- Executive Summary -->
-  <div class="summary-box">
-    <h3>&#128196; EXECUTIVE SUMMARY</h3>
-    <p>
-      This report covers the AIPDA threat detection system activity.<br>
-      Total scans processed: <strong>{{stats.total}}</strong> &nbsp;|&nbsp;
-      Phishing detected: <strong style="color:#ff4060;">{{stats.phishing}}</strong> &nbsp;|&nbsp;
-      Suspicious: <strong style="color:#ffb800;">{{stats.suspicious}}</strong> &nbsp;|&nbsp;
-      Legitimate: <strong style="color:#00e676;">{{stats.legitimate}}</strong><br>
-      Active users: <strong>{{stats.users}}</strong> &nbsp;|&nbsp;
-      Whitelisted domains: <strong>{{stats.whitelist}}</strong> &nbsp;|&nbsp;
-      Blacklisted domains: <strong>{{stats.blacklist}}</strong>
+  <div class="section">
+    <div class="section-title">System Overview</div>
+    <div class="data-grid">
+      <div class="data-item"><span class="label">Total Scans Analyzed</span><span class="value">{{stats.total}}</span></div>
+      <div class="data-item"><span class="label">Malicious Payloads Found</span><span class="value" style="color:var(--red)">{{stats.phishing}}</span></div>
+      <div class="data-item"><span class="label">Legitimate Traffic</span><span class="value" style="color:var(--green)">{{stats.legitimate}}</span></div>
+      <div class="data-item"><span class="label">Detection Success Rate</span><span class="value">{{ ((stats.phishing + stats.legitimate) / stats.total * 100)|round|int if stats.total > 0 else 0 }}%</span></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Global Threat Logs</div>
+    <table class="threat-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Agent</th>
+          <th>Payload Snapshot</th>
+          <th>Verdict</th>
+          <th>Time</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for s in recent %}
+        <tr>
+          <td>{{s.id}}</td>
+          <td style="font-weight:700;">{{s.username}}</td>
+          <td style="color:var(--text-muted); max-width:200px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{s.input[:40]}}</td>
+          <td><span class="verdict {{s.verdict.lower()}}">{{s.verdict}}</span></td>
+          <td>{{s.timestamp[-8:]}}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Forensic Conclusion</div>
+    <p style="font-size:.85rem; line-height:1.6; color:var(--text-muted); font-family:var(--mono);">
+      Based on the analyzed data, the system has successfully mitigated {{stats.phishing}} phishing attempts. 
+      The current security posture is stable. It is recommended to continue regular personnel training via the 
+      War Games Simulator to maintain high detection rates.
     </p>
   </div>
 
-  <!-- KPIs -->
-  <div class="kpis">
-    <div class="kpi tel"><div class="n">{{stats.total}}</div><div class="l">TOTAL SCANS</div></div>
-    <div class="kpi red"><div class="n">{{stats.phishing}}</div><div class="l">PHISHING</div></div>
-    <div class="kpi yel"><div class="n">{{stats.suspicious}}</div><div class="l">SUSPICIOUS</div></div>
-    <div class="kpi grn"><div class="n">{{stats.legitimate}}</div><div class="l">LEGITIMATE</div></div>
-    <div class="kpi tel"><div class="n">{{stats.users}}</div><div class="l">USERS</div></div>
-    <div class="kpi red"><div class="n">{{stats.blacklist}}</div><div class="l">BLACKLISTED</div></div>
+  <div style="margin-top:60px; padding-top:20px; border-top:1px solid rgba(255,255,255,0.05); display:flex; justify-content:space-between; align-items:center;">
+    <div style="font-family:var(--mono); font-size:.65rem; color:var(--text-muted);">
+      GENERATED_BY: AIPDA_AUTONOMOUS_INTELLIGENCE<br>
+      DATE: {{recent[0].timestamp[:10] if recent else '2026-04-25'}}
+    </div>
+    <div style="width:150px; opacity:0.3;">
+      <i class="fa-solid fa-shield-halved" style="font-size:3rem; color:var(--cyan);"></i>
+    </div>
   </div>
+</div>
 
-  <!-- Top Users -->
-  <div class="card">
-    <div class="card-head"><span class="card-title">// TOP USERS BY SCAN ACTIVITY</span></div>
-    <table>
-      <thead><tr><th>#</th><th>USERNAME</th><th>TOTAL SCANS</th><th>PHISHING FOUND</th><th>THREAT RATE</th></tr></thead>
-      <tbody>
-        {% for u in top_users %}
-        <tr>
-          <td>{{loop.index}}</td>
-          <td style="color:var(--teal);">{{u.username}}</td>
-          <td>{{u.total}}</td>
-          <td style="color:var(--red);">{{u.phishing}}</td>
-          <td>{% if u.total > 0 %}{{((u.phishing / u.total) * 100)|round(1)}}%{% else %}0%{% endif %}</td>
-        </tr>
-        {% else %}
-        <tr><td colspan="5" style="text-align:center;opacity:.5;">No data yet</td></tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
+<script>
+function exportPDF() {
+  const element = document.getElementById('reportContent');
+  const opt = {
+    margin:       [10, 10],
+    filename:     'AIPDA_Forensic_Report.pdf',
+    image:        { type: 'jpeg', quality: 0.98 },
+    html2canvas:  { scale: 2, backgroundColor: '#050505' },
+    jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+  };
+  html2pdf().set(opt).from(element).save();
+}
+</script>
 
-  <!-- All Users -->
-  <div class="card">
-    <div class="card-head"><span class="card-title">// ALL REGISTERED USERS</span></div>
-    <table>
-      <thead><tr><th>#</th><th>USERNAME</th><th>ROLE</th><th>CREATED</th></tr></thead>
-      <tbody>
-        {% for u in all_users %}
-        <tr>
-          <td>{{u.id}}</td>
-          <td style="color:var(--text);">{{u.username}}</td>
-          <td><span class="badge {% if u.role == 'admin' %}ph{% else %}le{% endif %}">{{u.role.upper()}}</span></td>
-          <td>{{u.created_at}}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
+<!-- LANG + LOGOUT -->
+<div style="position:fixed;top:20px;right:20px;z-index:10000;display:flex;gap:10px;">
+  <button id="langBtn" onclick="toggleLang()" style="font-size:.72rem;font-weight:700;color:#00f0ff;background:rgba(0,240,255,0.08);border:1px solid rgba(0,240,255,0.25);padding:6px 12px;cursor:pointer;font-family:'Space Grotesk',sans-serif;">عربي</button>
+  <a href="/logout" style="font-size:.72rem;font-weight:700;color:#ff003c;background:rgba(255,0,60,0.08);border:1px solid rgba(255,0,60,0.25);padding:6px 12px;text-decoration:none;font-family:'Space Grotesk',sans-serif;" id="logoutBtn">⏻ LOGOUT</a>
+</div>
 
-  <!-- Recent Phishing -->
-  <div class="card">
-    <div class="card-head"><span class="card-title">// RECENT PHISHING DETECTIONS</span></div>
-    <table>
-      <thead><tr><th>#</th><th>USER</th><th>INPUT</th><th>METHOD</th><th>TIME</th></tr></thead>
-      <tbody>
-        {% for s in recent_phishing %}
-        <tr>
-          <td>{{s.id}}</td>
-          <td style="color:var(--teal);">{{s.username}}</td>
-          <td style="max-width:320px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--red);">{{s.input[:70]}}{% if s.input|length > 70 %}...{% endif %}</td>
-          <td>{{s.method}}</td>
-          <td>{{s.timestamp}}</td>
-        </tr>
-        {% else %}
-        <tr><td colspan="5" style="text-align:center;opacity:.5;">No phishing detected yet</td></tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
-</main>
-<footer>AIPDA &middot; CONFIDENTIAL SECURITY REPORT &middot; {{report_date}}</footer>
+<script>
+var L = localStorage.getItem('aipda_lang') || 'en';
+function applyLang() {
+  var ar = L === 'ar';
+  document.documentElement.setAttribute('dir', ar ? 'rtl' : 'ltr');
+  document.documentElement.setAttribute('lang', L);
+  document.getElementById('langBtn').textContent = ar ? 'English' : 'عربي';
+  document.getElementById('logoutBtn').textContent = ar ? '⏻ خروج' : '⏻ LOGOUT';
+  if (ar) { document.body.style.fontFamily = "'Tajawal', sans-serif"; }
+}
+function toggleLang() {
+  L = L === 'en' ? 'ar' : 'en';
+  localStorage.setItem('aipda_lang', L);
+  applyLang();
+}
+applyLang();
+</script>
+
 </body>
 </html>

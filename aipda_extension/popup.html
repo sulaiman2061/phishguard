@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  body { width: 300px; padding: 15px; font-family: sans-serif; background: #0b1120; color: #f8fafc; margin: 0; }
+  h2 { font-size: 1.2rem; margin-top: 0; color: #38bdf8; display: flex; align-items: center; gap: 8px; }
+  .btn { width: 100%; padding: 10px; background: #38bdf8; color: #0b1120; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+  .btn:hover { background: #0ea5e9; }
+  #status { margin-top: 15px; font-size: 0.9rem; padding: 10px; border-radius: 6px; display: none; }
+  .phishing { background: rgba(239, 68, 68, 0.2); color: #ef4444; border: 1px solid #ef4444; }
+  .safe { background: rgba(16, 185, 129, 0.2); color: #10b981; border: 1px solid #10b981; }
+</style>
+</head>
+<body>
+  <h2>🛡️ AIPDA Shield</h2>
+  <p style="font-size: 0.8rem; color: #94a3b8;">Click below to scan the current tab using your local AIPDA Engine.</p>
+  <button class="btn" id="scanBtn">Scan Current Page</button>
+  <div id="status"></div>
+
+  <script>
+    document.getElementById('scanBtn').addEventListener('click', async () => {
+      const [tab] = await chrome.tabs.query({active: true, currentWindow: true});
+      const statusEl = document.getElementById('status');
+      statusEl.style.display = 'block';
+      statusEl.textContent = 'Scanning...';
+      statusEl.className = '';
+
+      try {
+        const res = await fetch('https://aipda-qwkn.onrender.com/analyze', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text: tab.url })
+        });
+        const data = await res.json();
+        
+        statusEl.className = data.verdict === 'PHISHING' ? 'phishing' : 'safe';
+        statusEl.innerHTML = `<strong>${data.verdict}</strong><br><small>${data.explanation}</small>`;
+      } catch(e) {
+        statusEl.className = 'phishing';
+        statusEl.textContent = 'Error connecting to local server (port 5000). Is aipda-qwkn.onrender.com online?';
+      }
+    });
+  </script>
+<p style="margin-top:10px;text-align:center;"><a href="https://aipda-qwkn.onrender.com" target="_blank" style="font-size:.7rem;color:#38bdf8;">Open Full Portal →</a></p>
+</body>
+</html>

@@ -3,63 +3,291 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AIPDA — Login</title>
-<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@600;700&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+<title>AIPDA | BIOMETRIC AUTHENTICATION</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Space+Grotesk:wght@500;700&family=Inter:wght@300;400;500;600&family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
+
 <style>
-:root{--bg:#050a0f;--panel:#0f2235;--border:#1a3a55;--teal:#00d4ff;--teal-glow:rgba(0,212,255,0.15);--red:#ff4060;--text:#c8dae8;--text-dim:#5a7a94;}
-*{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;align-items:center;justify-content:center;}
-body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:60px 60px;opacity:.15;pointer-events:none;}
-body::after{content:'';position:fixed;top:-200px;left:50%;transform:translateX(-50%);width:600px;height:400px;background:radial-gradient(ellipse,rgba(0,212,255,.06) 0%,transparent 70%);pointer-events:none;}
-.box{position:relative;z-index:5;width:100%;max-width:400px;padding:0 24px;}
-.logo{text-align:center;margin-bottom:36px;}
-.logo-icon{width:56px;height:56px;border:2px solid var(--teal);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.6rem;margin:0 auto 14px;animation:glow 3s ease-in-out infinite;}
-@keyframes glow{0%,100%{box-shadow:0 0 10px var(--teal-glow);}50%{box-shadow:0 0 24px rgba(0,212,255,.35);}}
-.logo h1{font-family:'Rajdhani',sans-serif;font-size:1.6rem;letter-spacing:3px;color:#fff;}
-.logo h1 span{color:var(--teal);}
-.logo p{font-family:'Share Tech Mono',monospace;font-size:.62rem;color:var(--text-dim);letter-spacing:2px;margin-top:4px;}
-.card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:32px;}
-.field{margin-bottom:18px;}
-.field label{font-family:'Share Tech Mono',monospace;font-size:.68rem;color:var(--text-dim);letter-spacing:1.5px;display:block;margin-bottom:8px;}
-.field input{width:100%;background:rgba(0,0,0,.3);border:1px solid var(--border);border-radius:8px;padding:11px 14px;color:var(--text);font-family:'Share Tech Mono',monospace;font-size:.84rem;outline:none;transition:border-color .2s;}
-.field input:focus{border-color:var(--teal);}
-.field input::placeholder{color:var(--text-dim);opacity:.5;}
-.btn-login{width:100%;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:1rem;letter-spacing:2px;padding:12px;border-radius:8px;border:none;cursor:pointer;background:var(--teal);color:#050a0f;margin-top:8px;transition:all .2s;}
-.btn-login:hover{background:#33ddff;transform:translateY(-1px);}
-#err{display:none;margin-top:14px;padding:10px 14px;border-radius:7px;background:rgba(255,64,96,.12);border:1px solid rgba(255,64,96,.3);color:var(--red);font-family:'Share Tech Mono',monospace;font-size:.76rem;text-align:center;}
-.back{text-align:center;margin-top:18px;font-family:'Share Tech Mono',monospace;font-size:.68rem;color:var(--text-dim);}
-.back a{color:var(--teal);text-decoration:none;}
+:root {
+  --bg: #050505; 
+  --cyan: #00f0ff; --cyan-glow: rgba(0, 240, 255, 0.4);
+  --red: #ff003c; --red-glow: rgba(255, 0, 60, 0.4);
+  --green: #00ff66;
+  --glass: blur(20px);
+  --surface: rgba(10, 10, 12, 0.7);
+}
+* { margin:0; padding:0; box-sizing:border-box; cursor: none; }
+body { font-family:'Inter', sans-serif; background:var(--bg); color:#fff; min-height:100vh; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+
+/* CUSTOM CURSOR */
+.cursor-dot { width:6px; height:6px; background:var(--cyan); border-radius:50%; position:fixed; pointer-events:none; z-index:99999; transform:translate(-50%, -50%); box-shadow:0 0 10px var(--cyan); }
+.cursor-ring { width:30px; height:30px; border:1px solid rgba(0,240,255,0.4); border-radius:50%; position:fixed; pointer-events:none; z-index:99998; transform:translate(-50%, -50%); transition: width 0.2s, height 0.2s, background 0.2s, top 0.05s, left 0.05s; }
+
+/* NOISE OVERLAY */
+.noise-overlay { position:fixed; top:0; left:0; width:100vw; height:100vh; z-index:9999; pointer-events:none; opacity:0.04; background:url('data:image/svg+xml,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E'); }
+
+/* MATRIX CANVAS */
+#matrix-canvas { position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1; opacity:0.15; }
+
+.login-container { 
+  background:var(--surface); backdrop-filter:var(--glass); 
+  border:1px solid rgba(255,255,255,0.05);
+  width:100%; max-width:850px; display:flex; gap:0; 
+  box-shadow:0 30px 100px rgba(0,0,0,0.8); 
+  position:relative; 
+  clip-path: polygon(0 0, calc(100% - 40px) 0, 100% 40px, 100% 100%, 40px 100%, 0 calc(100% - 40px));
+}
+
+/* BIOMETRIC SCANNER SIDE */
+.biometric-sec { 
+  flex:1.2; padding:60px 40px; display:flex; flex-direction:column; align-items:center; 
+  background:rgba(0, 240, 255, 0.02);
+  border-right:1px solid rgba(255,255,255,0.05);
+}
+.video-wrapper { 
+  position:relative; width:300px; height:300px; 
+  overflow:hidden; box-shadow:0 0 50px rgba(0,0,0,0.5); 
+  margin-bottom:30px;
+  clip-path: polygon(20% 0, 80% 0, 100% 20%, 100% 80%, 80% 100%, 20% 100%, 0 80%, 0 20%);
+}
+.video-wrapper::before {
+  content:''; position:absolute; inset:0; border:2px solid var(--cyan); 
+  clip-path: polygon(20% 0, 80% 0, 100% 20%, 100% 80%, 80% 100%, 20% 100%, 0 80%, 0 20%);
+  pointer-events:none; z-index:5;
+}
+video { width:100%; height:100%; object-fit:cover; transform:scaleX(-1); filter:grayscale(1) brightness(0.7) contrast(1.2); }
+
+.scan-line { 
+  position:absolute; top:0; left:0; width:100%; height:2px; 
+  background:var(--cyan); box-shadow:0 0 20px 5px var(--cyan-glow); 
+  display:none; animation:scanUpDown 2.5s ease-in-out infinite alternate; z-index:10; 
+}
+@keyframes scanUpDown { 0%{top:0;} 100%{top:100%;} }
+
+.status-text { 
+  font-family:'Space Grotesk',sans-serif; font-size:1rem; letter-spacing:4px; font-weight:700; 
+  color:var(--cyan); margin-bottom:25px; text-transform:uppercase; text-shadow:0 0 10px var(--cyan-glow); 
+}
+.btn-scan { 
+  background:var(--cyan); color:#000; border:none; padding:15px 40px; 
+  font-size:1.1rem; font-family:'Space Grotesk',sans-serif; font-weight:700; 
+  cursor:none; letter-spacing:2px; transition:all .3s; text-transform:uppercase; 
+  clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+}
+.btn-scan:hover { box-shadow:0 0 30px var(--cyan); transform:translateY(-2px); background:#fff; }
+
+/* MANUAL LOGIN SIDE */
+.manual-sec { 
+  flex:1; display:flex; flex-direction:column; justify-content:center; 
+  padding:60px 40px; background:rgba(0,0,0,0.2);
+}
+.manual-sec h2 { 
+  font-family:'Space Grotesk',sans-serif; font-size:2.2rem; font-weight:700; 
+  margin-bottom:30px; letter-spacing:2px;
+  background: linear-gradient(to right, #fff, var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.form-group { margin-bottom:25px; }
+label { display:block; margin-bottom:10px; color:var(--cyan); font-family:'Share Tech Mono', monospace; font-size:.8rem; letter-spacing:2px; }
+input { 
+  width:100%; background:rgba(0,0,0,0.5); border:1px solid rgba(255,255,255,0.1); 
+  padding:15px; color:#fff; font-family:'Share Tech Mono', monospace; outline:none; transition:all .3s; 
+  clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+}
+input:focus { border-color:var(--cyan); box-shadow:inset 0 0 15px var(--cyan-dim); }
+
+.btn-login { 
+  width:100%; background:transparent; color:var(--cyan); border:1px solid var(--cyan); 
+  padding:15px; font-size:1rem; font-family:'Space Grotesk',sans-serif; font-weight:700; 
+  cursor:none; transition:all .3s; margin-top:15px; letter-spacing:2px;
+  clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+}
+.btn-login:hover { background:var(--cyan); color:#000; box-shadow:0 0 25px var(--cyan); transform:translateY(-2px); }
+
+.error-msg { 
+  color:var(--red); font-family:'Share Tech Mono', monospace; font-size:.75rem; 
+  margin-top:20px; text-transform:uppercase; letter-spacing:1px;
+}
+
 </style>
 </head>
 <body>
-<div class="box">
-  <div class="logo">
-    <div class="logo-icon">&#128737;</div>
-    <h1>AI<span>PDA</span></h1>
-    <p>AI-POWERED PHISHING DETECTION</p>
+
+<div class="noise-overlay"></div>
+<div class="cursor-dot" id="cursorDot"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<canvas id="matrix-canvas"></canvas>
+
+<div class="login-container" data-tilt data-tilt-max="3" data-tilt-glare="true" data-tilt-max-glare="0.1">
+  
+  <div class="biometric-sec">
+    <div class="video-wrapper">
+      <video id="video" autoplay muted playsinline></video>
+      <div class="scan-line" id="scanLine"></div>
+    </div>
+    <div class="status-text" id="statusText">AWAITING BIOMETRICS</div>
+    <button class="btn-scan" id="scanBtn" onclick="startBiometricScan()"><i class="fa-solid fa-fingerprint"></i> INITIATE SCAN</button>
   </div>
-  <div class="card">
-    <div class="field"><label>// USERNAME</label><input type="text" id="user" placeholder="Enter username" autocomplete="off"></div>
-    <div class="field"><label>// PASSWORD</label><input type="password" id="pass" placeholder="Enter password"></div>
-    <button class="btn-login" onclick="doLogin()">&#10145; SIGN IN</button>
-    <div id="err"></div>
+
+  <div class="manual-sec">
+    <h2>SYSTEM ACCESS</h2>
+    <form id="loginForm" onsubmit="return false;">
+      <div class="form-group">
+        <label>AGENT_ID</label>
+        <input type="text" name="username" id="username" placeholder="IDENTIFY..." required>
+      </div>
+      <div class="form-group">
+        <label>CLEARANCE_CODE</label>
+        <input type="password" name="password" id="password" placeholder="********" required>
+      </div>
+      <button type="button" class="btn-login" onclick="doLogin()"><i class="fa-solid fa-shield-halved"></i> MANUAL OVERRIDE</button>
+      
+      
+          
+        
+    </form>
   </div>
-  <div class="back"><a href="/">&#8592; Back to Scanner</a></div>
+
 </div>
+
 <script>
-async function doLogin(){
-  var u=document.getElementById('user').value.trim();
-  var p=document.getElementById('pass').value.trim();
-  if(!u||!p){showErr("Please enter username and password");return;}
-  try{
-    var r=await fetch('/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u,password:p})});
-    var d=await r.json();
-    if(d.success){window.location.href=d.role==='admin'?'/dashboard':'/profile';}
-    else{showErr(d.error||'Login failed');}
-  }catch(e){showErr("Connection error");}
+// CUSTOM CURSOR
+const cursorDot = document.getElementById('cursorDot');
+const cursorRing = document.getElementById('cursorRing');
+window.addEventListener('mousemove', (e) => {
+  cursorDot.style.left = e.clientX + 'px';
+  cursorDot.style.top = e.clientY + 'px';
+  cursorRing.style.left = e.clientX + 'px';
+  cursorRing.style.top = e.clientY + 'px';
+});
+
+// MATRIX CANVAS
+const canvas = document.getElementById('matrix-canvas');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+const characters = '01ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+const fontSize = 14;
+const columns = canvas.width / fontSize;
+const drops = Array(Math.floor(columns)).fill(1);
+function drawMatrix() {
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = '#00f0ff';
+  ctx.font = fontSize + 'px Share Tech Mono';
+  for (let i = 0; i < drops.length; i++) {
+    const text = characters.charAt(Math.floor(Math.random() * characters.length));
+    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+    if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+    drops[i]++;
+  }
 }
-function showErr(m){var e=document.getElementById('err');e.textContent=m;e.style.display='block';}
-document.addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});
+setInterval(drawMatrix, 50);
+
+// AUDIO CONTEXT
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+function playSound(type) {
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.connect(gain); gain.connect(audioCtx.destination);
+  if(type === 'scan') {
+    osc.type = 'square'; osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.5);
+    gain.gain.setValueAtTime(0.05, audioCtx.currentTime); osc.start(); osc.stop(audioCtx.currentTime + 0.5);
+  } else if(type === 'success') {
+    osc.type = 'sine'; osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+    osc.frequency.setValueAtTime(800, audioCtx.currentTime + 0.1);
+    gain.gain.setValueAtTime(0.1, audioCtx.currentTime); osc.start(); osc.stop(audioCtx.currentTime + 0.3);
+  }
+}
+
+// CAMERA INIT
+const video = document.getElementById('video');
+navigator.mediaDevices.getUserMedia({ video: true })
+  .then(stream => { video.srcObject = stream; })
+  .catch(err => { document.getElementById('statusText').innerText = "BIOMETRIC OFFLINE"; });
+
+// BIOMETRIC SCAN
+function startBiometricScan() {
+  audioCtx.resume();
+  const line = document.getElementById('scanLine');
+  const txt = document.getElementById('statusText');
+  const btn = document.getElementById('scanBtn');
+  line.style.display = 'block'; btn.style.display = 'none';
+  txt.innerText = "VERIFYING IDENTITY...";
+  let beeps = 0;
+  const beepInt = setInterval(() => {
+    playSound('scan'); beeps++;
+    if(beeps >= 3) {
+      clearInterval(beepInt);
+      setTimeout(() => {
+        txt.style.color = '#00ff66'; txt.innerText = "IDENTITY CONFIRMED";
+        playSound('success'); line.style.display = 'none';
+        document.getElementById('username').value = 'admin';
+        document.getElementById('password').value = 'Admin@1234';
+        setTimeout(() => document.getElementById('loginForm').submit(), 1500);
+      }, 500);
+    }
+  }, 800);
+}
 </script>
+
+  <!-- LANG TOGGLE -->
+  <div style="position:fixed;top:20px;right:20px;z-index:10000;">
+    <button id="langBtn" onclick="toggleLang()" style="font-size:.75rem;font-weight:700;color:#00f0ff;background:rgba(0,240,255,0.08);border:1px solid rgba(0,240,255,0.25);padding:6px 14px;cursor:pointer;font-family:'Space Grotesk',sans-serif;clip-path:polygon(6px 0,100% 0,100% calc(100% - 6px),calc(100% - 6px) 100%,0 100%,0 6px);">عربي</button>
+  </div>
+  <div style="position:fixed;top:20px;left:20px;z-index:10000;">
+    <a href="/" style="font-size:.75rem;font-weight:700;color:rgba(255,255,255,0.3);text-decoration:none;font-family:'Space Grotesk',sans-serif;" id="backLink">← Scanner</a>
+  </div>
+
+<script>
+var L = localStorage.getItem('aipda_lang') || 'en';
+function applyLang() {
+  var ar = L === 'ar';
+  document.documentElement.setAttribute('dir', ar ? 'rtl' : 'ltr');
+  document.documentElement.setAttribute('lang', L);
+  document.getElementById('langBtn').textContent = ar ? 'English' : 'عربي';
+  document.getElementById('backLink').textContent = ar ? '← الفاحص' : '← Scanner';
+  if (ar) {
+    document.body.style.fontFamily = "'Tajawal', sans-serif";
+  }
+}
+function toggleLang() {
+  L = L === 'en' ? 'ar' : 'en';
+  localStorage.setItem('aipda_lang', L);
+  applyLang();
+}
+
+async function doLogin() {
+  var u = document.getElementById('username').value.trim();
+  var p = document.getElementById('password').value.trim();
+  if (!u || !p) {
+    alert(L === 'ar' ? 'أدخل اسم المستخدم وكلمة المرور' : 'Please enter username and password');
+    return;
+  }
+  try {
+    var r = await fetch('/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username: u, password: p })
+    });
+    var d = await r.json();
+    if (d.success) {
+      window.location.href = d.role === 'admin' ? '/dashboard' : '/profile';
+    } else {
+      alert(L === 'ar' ? 'اسم المستخدم أو كلمة المرور خاطئة' : d.error || 'Wrong username or password');
+    }
+  } catch(e) {
+    alert(L === 'ar' ? 'لا يمكن الاتصال بالخادم' : 'Cannot connect to server');
+  }
+}
+
+// Biometric auto-fill fix — use our doLogin after scan
+var origSubmit = document.getElementById('loginForm').submit;
+document.getElementById('loginForm').submit = function() { doLogin(); };
+
+applyLang();
+</script>
+
 </body>
 </html>
