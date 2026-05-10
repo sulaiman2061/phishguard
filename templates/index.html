@@ -177,7 +177,7 @@ body.ar footer{font-family:'Tajawal',sans-serif;font-size:.8rem;letter-spacing:0
 
   <div id="loading">
     <div class="ltxt t" data-en="SCANNING THREAT PATTERNS..." data-ar="جاري فحص أنماط التهديد...">SCANNING THREAT PATTERNS...</div>
-    <div class="lsub t" data-en="Checking NCA database · whitelist · blacklist · AI engine" data-ar="فحص قاعدة NCA · القائمة البيضاء · السوداء · محرك الذكاء الاصطناعي">Checking whitelist · blacklist · AI engine</div>
+    <div class="lsub t" data-en="Checking whitelist · blacklist · AI engine" data-ar="فحص القائمة البيضاء · السوداء · محرك الذكاء الاصطناعي">Checking whitelist · blacklist · AI engine</div>
     <div class="scan"></div>
   </div>
 
@@ -213,24 +213,12 @@ var EX = {
   su: "Check this deal: https://bit.ly/3xK9mZq limited time only!",
   s1: "Hi Sarah, please find attached the meeting agenda for Thursday. Best regards, John",
   s2: "https://www.google.com/search?q=phishing+detection",
-  nca1: "https://absher.sa/login",
-  nca2: "http://absher-verify.xyz/login",
-  nca3: "https://zatca.gov.sa/services",
-  nca4: "http://alrajhi-secure.tk/verify",
   ar1: "عاجل: تم تعليق حسابك البنكي بسبب نشاط مشبوه. تحقق من هويتك الآن على http://192.168.0.1/login وادخل كلمة المرور ورقم بطاقة الائتمان فوراً."
 };
 
 var VERDICTS = {
   en: { PHISHING:'PHISHING', SUSPICIOUS:'SUSPICIOUS', LEGITIMATE:'LEGITIMATE', WHITELISTED:'WHITELISTED' },
   ar: { PHISHING:'تصيد احتيالي', SUSPICIOUS:'مشبوه', LEGITIMATE:'آمن', WHITELISTED:'موثوق' }
-};
-var METHOD_LABELS = {
-  'NCA Official Database':       { en:'NCA Official Database ✓', ar:'قاعدة NCA الرسمية ✓' },
-  'NCA Threat Intelligence':     { en:'NCA Threat Intelligence', ar:'استخبارات تهديدات NCA' },
-  'Rule-Based v4.0':             { en:'Rule-Based Analysis v4.0', ar:'تحليل قاعدة البيانات v4.0' },
-  'Whitelist Check':             { en:'Organization Whitelist', ar:'القائمة البيضاء' },
-  'Blacklist Check':             { en:'Organization Blacklist', ar:'القائمة السوداء' },
-  'AI Analysis (OpenAI)':        { en:'AI Analysis (OpenAI)', ar:'تحليل ذكاء اصطناعي' },
 };
 
 var CONF = {

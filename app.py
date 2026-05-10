@@ -4,14 +4,75 @@
 # =====================================================
 
 from flask import Flask, request, jsonify, render_template, redirect, session
-try:
-    from nca_engine import analyze_with_nca, is_nca_official, get_nca_stats
-    NCA_ENABLED = True
-except:
-    NCA_ENABLED = False
-    def analyze_with_nca(t): return {'nca_result':'UNKNOWN','verdict':None,'nca_flags':[],'method':None}
-    def is_nca_official(t): return False, None
-    def get_nca_stats(): return {}
+import urllib.request as urlreq
+
+# -------------------------------------------------------
+# VIRUSTOTAL API INTEGRATION
+# -------------------------------------------------------
+VIRUSTOTAL_API_KEY = os.environ.get('VIRUSTOTAL_API_KEY', '')
+
+def check_virustotal(url_or_text):
+    """
+    Check URL with VirusTotal API
+    Free: 4 requests/minute
+    Returns dict with verdict and stats
+    """
+    if not VIRUSTOTAL_API_KEY:
+        return None
+    
+    # Extract URL if text contains one
+    import re
+    url_match = re.search(r'https?://[^ ]+', url_or_text)
+    if not url_match:
+        return None
+    
+    check_url = url_match.group(0)
+    
+    try:
+        import base64
+        # Encode URL for VirusTotal
+        url_id = base64.urlsafe_b64encode(check_url.encode()).decode().rstrip('=')
+        
+        req = urlreq.Request(
+            f'https://www.virustotal.com/api/v3/urls/{url_id}',
+            headers={'x-apikey': VIRUSTOTAL_API_KEY}
+        )
+        
+        with urlreq.urlopen(req, timeout=5) as resp:
+            data = json.loads(resp.read().decode())
+        
+        stats = data['data']['attributes']['last_analysis_stats']
+        malicious = stats.get('malicious', 0)
+        suspicious = stats.get('suspicious', 0)
+        harmless = stats.get('harmless', 0)
+        total = malicious + suspicious + harmless + stats.get('undetected', 0)
+        
+        if malicious >= 3:
+            verdict = 'PHISHING'
+            confidence = 'High'
+            explanation = f'VirusTotal: {malicious}/{total} security engines flagged this URL as malicious.'
+        elif malicious >= 1 or suspicious >= 3:
+            verdict = 'SUSPICIOUS'
+            confidence = 'Medium'
+            explanation = f'VirusTotal: {malicious} malicious, {suspicious} suspicious out of {total} engines.'
+        else:
+            verdict = 'LEGITIMATE'
+            confidence = 'High'
+            explanation = f'VirusTotal: Clean — {harmless}/{total} engines confirmed safe.'
+        
+        return {
+            'verdict': verdict,
+            'confidence': confidence,
+            'explanation': explanation,
+            'red_flags': [f'Flagged by {malicious} security engines'] if malicious > 0 else [],
+            'safe_signals': [f'Clean: {harmless}/{total} engines'] if malicious == 0 else [],
+            'method': f'VirusTotal ({malicious} malicious / {total} engines)',
+            'vt_stats': stats
+        }
+    
+    except Exception as e:
+        print(f'VirusTotal error: {e}')
+        return None
 from functools import wraps
 import re, os, sqlite3, datetime, hashlib, urllib.parse
 
@@ -384,40 +445,6 @@ def analyze():
     username = session.get('username', 'guest')
     ip = request.remote_addr
 
-    # ── NCA CHECK (GROUND TRUTH — runs before everything) ──
-    # لا يمكن تجاوزها حتى لو الدومين في الـ Whitelist
-    if NCA_ENABLED:
-        nca = analyze_with_nca(user_input)
-
-        # NCA رسمي — موثوق تماماً
-        if nca['nca_result'] == 'OFFICIAL':
-            result = {
-                'verdict': 'LEGITIMATE',
-                'confidence': 'High',
-                'explanation': nca['explanation'],
-                'red_flags': [],
-                'safe_signals': ['NCA Verified Official Domain'],
-                'method': 'NCA Official Database'
-            }
-            save_scan(user_id,username,user_input,result['verdict'],
-                      result['confidence'],result['explanation'],result['method'],ip)
-            return jsonify(result)
-
-        # NCA تصيد — محجوب حتى لو في الـ Whitelist
-        if nca['nca_result'] == 'PHISHING':
-            result = {
-                'verdict': 'PHISHING',
-                'confidence': nca.get('confidence','High'),
-                'explanation': nca['explanation'],
-                'red_flags': nca.get('nca_flags',[]),
-                'safe_signals': [],
-                'method': nca.get('method','NCA Threat Intelligence')
-            }
-            save_scan(user_id,username,user_input,result['verdict'],
-                      result['confidence'],result['explanation'],result['method'],ip)
-            return jsonify(result)
-
-    # ── WHITELIST CHECK ──
     if check_whitelist(user_input):
         result = {"verdict":"WHITELISTED","confidence":"High",
                   "explanation":"This domain is in your organization's trusted whitelist.",
@@ -550,12 +577,6 @@ def del_blacklist(id):
     conn.execute('DELETE FROM blacklist WHERE id=?',(id,))
     conn.commit(); conn.close()
     return jsonify({"success":True})
-
-@app.route('/api/nca-stats')
-def api_nca_stats():
-    if NCA_ENABLED:
-        return jsonify(get_nca_stats())
-    return jsonify({'error': 'NCA engine not available'})
 
 @app.route('/api/stats')
 def api_stats():
