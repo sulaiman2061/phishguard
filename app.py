@@ -613,4 +613,4 @@ if __name__ == '__main__':
     print("  Dashboard: http://localhost:5000/dashboard")
     print("  Admin:     admin / Admin@1234")
     print("="*50+"\n")
-    app.run(debug=False, host='0.0.0.0', port=5000)
+    app.run(debug=False, host='0.0.0.0', port=int(os.environ.get("PORT", 5000)))
