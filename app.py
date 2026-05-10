@@ -1,3 +1,4 @@
+import os
 # =====================================================
 # AIPDA - AI Powered Detection of Phishing Attacks
 # Version 4.0 - Enterprise Edition
