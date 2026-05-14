@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  aipda:
+    build: .
+    container_name: aipda_app
+    ports:
+      - "5000:5000"
+    environment:
+      - VIRUSTOTAL_API_KEY=${VIRUSTOTAL_API_KEY:-}
+      - SECRET_KEY=${SECRET_KEY:-aipda-secret-2025}
+    volumes:
+      - aipda_db:/app/aipda.db
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  aipda_db:
