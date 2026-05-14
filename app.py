@@ -11,6 +11,7 @@ import urllib.request as urlreq
 # VIRUSTOTAL API INTEGRATION
 # -------------------------------------------------------
 VIRUSTOTAL_API_KEY = os.environ.get('VIRUSTOTAL_API_KEY', '')
+GOOGLE_SAFE_BROWSING_KEY = os.environ.get("GOOGLE_SAFE_BROWSING_KEY", "")
 
 def check_virustotal(url_or_text):
     """
@@ -434,6 +435,45 @@ def blocked():
 # -------------------------------------------------------
 # ANALYZE API
 # -------------------------------------------------------
+
+# -------------------------------------------------------
+# GOOGLE SAFE BROWSING API
+# -------------------------------------------------------
+def check_google_safe_browsing(url_or_text):
+    if not GOOGLE_SAFE_BROWSING_KEY:
+        return None
+    import re, json, urllib.request as urlreq
+    url_match = re.search(r'https?://[^ ]+', url_or_text)
+    if not url_match:
+        return None
+    check_url = url_match.group(0)
+    try:
+        endpoint = 'https://safebrowsing.googleapis.com/v4/threatMatches:find?key=' + GOOGLE_SAFE_BROWSING_KEY
+        payload = json.dumps({
+            "client": {"clientId": "aipda", "clientVersion": "4.0"},
+            "threatInfo": {
+                "threatTypes": ["MALWARE","SOCIAL_ENGINEERING","UNWANTED_SOFTWARE"],
+                "platformTypes": ["ANY_PLATFORM"],
+                "threatEntryTypes": ["URL"],
+                "threatEntries": [{"url": check_url}]
+            }
+        }).encode('utf-8')
+        req = urlreq.Request(endpoint, data=payload, headers={'Content-Type': 'application/json'})
+        with urlreq.urlopen(req, timeout=5) as resp:
+            data = json.loads(resp.read().decode())
+        if data.get('matches'):
+            threat_type = data['matches'][0].get('threatType', 'THREAT')
+            return {
+                'verdict': 'PHISHING', 'confidence': 'High',
+                'explanation': 'Google Safe Browsing: URL flagged as ' + threat_type,
+                'red_flags': ['Google Safe Browsing: ' + threat_type],
+                'safe_signals': [], 'method': 'Google Safe Browsing'
+            }
+        return None
+    except Exception as e:
+        print('GSB error:', e)
+        return None
+
 @app.route('/analyze', methods=['POST'])
 def analyze():
     data = request.get_json()
