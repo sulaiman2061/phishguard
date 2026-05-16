@@ -10,7 +10,7 @@
 *{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
 body.ar{font-family:'Tajawal',sans-serif;}
-body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:60px 60px;opacity:.15;pointer-events:none;z-index:0;}
+body::before{content:'';position:fixed;inset:0;opacity:0;pointer-events:none;z-index:0;}
 body::after{content:'';position:fixed;top:-200px;left:50%;transform:translateX(-50%);width:800px;height:500px;background:radial-gradient(ellipse,rgba(0,212,255,.06) 0%,transparent 70%);pointer-events:none;z-index:0;}
 header{position:relative;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:0 32px;height:65px;background:rgba(10,21,32,.95);border-bottom:1px solid var(--border);}
 .logo{display:flex;align-items:center;gap:12px;}
@@ -116,6 +116,7 @@ body.ar footer{font-family:'Tajawal',sans-serif;font-size:.8rem;letter-spacing:0
 </style>
 </head>
 <body>
+<canvas id="particle-canvas" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:0.5;"></canvas>
 <header>
   <div class="logo">
     <div class="logo-icon">&#128737;</div>
@@ -134,9 +135,9 @@ body.ar footer{font-family:'Tajawal',sans-serif;font-size:.8rem;letter-spacing:0
 
 <main>
   <div class="title">
-    <div class="eye t" data-en="// ENTERPRISE THREAT ANALYSIS ENGINE v2.0" data-ar="// محرك تحليل التهديدات المؤسسي">// ENTERPRISE THREAT ANALYSIS ENGINE v2.0</div>
-    <h2 class="t" data-en="Detect <em>Phishing Attacks</em> — Protect Your Organization" data-ar="اكتشف <em>هجمات التصيد</em> — احمِ مؤسستك">Detect <em>Phishing Attacks</em> — Protect Your Organization</h2>
-    <p class="t" data-en="AI-powered analysis with Whitelist / Blacklist / Proxy integration" data-ar="تحليل بالذكاء الاصطناعي مع دعم القائمة البيضاء والسوداء والبروكسي">AI-powered analysis with Whitelist / Blacklist / Proxy integration</p>
+    <div class="eye t" data-en="ENTERPRISE SECURITY PLATFORM" data-ar="منصة الأمن المؤسسي">ENTERPRISE SECURITY PLATFORM</div>
+    <h2 class="t" data-en="AI-Powered Detection of <em>Phishing Attacks</em>" data-ar="الكشف بالذكاء الاصطناعي عن <em>هجمات التصيد</em>">AI-Powered Detection of <em>Phishing Attacks</em></h2>
+
   </div>
 
   <div class="stats">
@@ -146,7 +147,7 @@ body.ar footer{font-family:'Tajawal',sans-serif;font-size:.8rem;letter-spacing:0
     <div class="stat"><div class="ico">&#128274;</div><div><div class="val" id="st4">-</div><div class="lbl t" data-en="Blacklisted" data-ar="محظور">Blacklisted</div></div></div>
   </div>
 
-  <div class="chips-lbl t" data-en="// QUICK TEST SAMPLES" data-ar="// نماذج اختبار سريعة">// QUICK TEST SAMPLES</div>
+  <div class="chips-lbl t" data-en="QUICK TEST SAMPLES" data-ar="// نماذج اختبار سريعة">QUICK TEST SAMPLES</div>
   <div class="chips">
     <button class="chip d" onclick="ex('p1')" data-en="&#9888; Phishing Email" data-ar="&#9888; إيميل تصيد">&#9888; Phishing Email</button>
     <button class="chip d" onclick="ex('p2')" data-en="&#9888; Fake Bank" data-ar="&#9888; بنك مزيف">&#9888; Fake Bank</button>
@@ -160,7 +161,7 @@ body.ar footer{font-family:'Tajawal',sans-serif;font-size:.8rem;letter-spacing:0
     <div class="phead">
       <div style="display:flex;align-items:center;gap:10px;">
         <div class="dots"><span></span><span></span><span></span></div>
-        <span class="ptitle t" data-en="INPUT_TARGET.txt" data-ar="النص_المدخل.txt">INPUT_TARGET.txt</span>
+        <span class="ptitle t" data-en="Input Target" data-ar="النص المدخل">Input Target</span>
       </div>
       <span class="counter" id="cnt">0 chars</span>
     </div>
@@ -177,7 +178,7 @@ body.ar footer{font-family:'Tajawal',sans-serif;font-size:.8rem;letter-spacing:0
 
   <div id="loading">
     <div class="ltxt t" data-en="SCANNING THREAT PATTERNS..." data-ar="جاري فحص أنماط التهديد...">SCANNING THREAT PATTERNS...</div>
-    <div class="lsub t" data-en="Checking whitelist · blacklist · AI engine" data-ar="فحص القائمة البيضاء · السوداء · محرك الذكاء الاصطناعي">Checking whitelist · blacklist · AI engine</div>
+    <div class="lsub t" data-en="Checking NCA database · whitelist · blacklist · AI engine" data-ar="فحص قاعدة NCA · القائمة البيضاء · السوداء · محرك الذكاء الاصطناعي">Checking whitelist · blacklist · AI engine</div>
     <div class="scan"></div>
   </div>
 
@@ -187,7 +188,7 @@ body.ar footer{font-family:'Tajawal',sans-serif;font-size:.8rem;letter-spacing:0
       <div><div class="vword" id="vw"></div><div class="vconf" id="vc"></div></div>
     </div>
     <div class="rbody">
-      <div class="stitle t" data-en="// ANALYSIS REPORT" data-ar="// تقرير التحليل">// ANALYSIS REPORT</div>
+      <div class="stitle t" data-en="ANALYSIS REPORT" data-ar="// تقرير التحليل">ANALYSIS REPORT</div>
       <div class="expl" id="expl"></div>
       <div id="fs" style="display:none">
         <div class="stitle" id="ft"></div>
@@ -213,12 +214,24 @@ var EX = {
   su: "Check this deal: https://bit.ly/3xK9mZq limited time only!",
   s1: "Hi Sarah, please find attached the meeting agenda for Thursday. Best regards, John",
   s2: "https://www.google.com/search?q=phishing+detection",
+  nca1: "https://absher.sa/login",
+  nca2: "http://absher-verify.xyz/login",
+  nca3: "https://zatca.gov.sa/services",
+  nca4: "http://alrajhi-secure.tk/verify",
   ar1: "عاجل: تم تعليق حسابك البنكي بسبب نشاط مشبوه. تحقق من هويتك الآن على http://192.168.0.1/login وادخل كلمة المرور ورقم بطاقة الائتمان فوراً."
 };
 
 var VERDICTS = {
   en: { PHISHING:'PHISHING', SUSPICIOUS:'SUSPICIOUS', LEGITIMATE:'LEGITIMATE', WHITELISTED:'WHITELISTED' },
   ar: { PHISHING:'تصيد احتيالي', SUSPICIOUS:'مشبوه', LEGITIMATE:'آمن', WHITELISTED:'موثوق' }
+};
+var METHOD_LABELS = {
+  'NCA Official Database':       { en:'NCA Official Database ✓', ar:'قاعدة NCA الرسمية ✓' },
+  'NCA Threat Intelligence':     { en:'NCA Threat Intelligence', ar:'استخبارات تهديدات NCA' },
+  'Rule-Based v4.0':             { en:'Rule-Based Analysis v4.0', ar:'تحليل قاعدة البيانات v4.0' },
+  'Whitelist Check':             { en:'Organization Whitelist', ar:'القائمة البيضاء' },
+  'Blacklist Check':             { en:'Organization Blacklist', ar:'القائمة السوداء' },
+  'AI Analysis (OpenAI)':        { en:'AI Analysis (OpenAI)', ar:'تحليل ذكاء اصطناعي' },
 };
 
 var CONF = {
@@ -353,5 +366,111 @@ document.addEventListener('keydown', function(e) {
 applyLang();
 loadStats();
 </script>
+
+<script>
+// ── PARTICLE NETWORK ──
+(function(){
+  var cv = document.getElementById('particle-canvas');
+  var ctx = cv.getContext('2d');
+  var pts = [];
+  function resize(){cv.width=window.innerWidth;cv.height=window.innerHeight;}
+  resize();
+  window.addEventListener('resize', resize);
+  for(var i=0;i<70;i++){
+    pts.push({
+      x: Math.random()*window.innerWidth,
+      y: Math.random()*window.innerHeight,
+      vx: (Math.random()-.5)*.35,
+      vy: (Math.random()-.5)*.35,
+      r: Math.random()*1.5+.5
+    });
+  }
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    pts.forEach(function(p){
+      p.x+=p.vx; p.y+=p.vy;
+      if(p.x<0||p.x>cv.width)p.vx*=-1;
+      if(p.y<0||p.y>cv.height)p.vy*=-1;
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle='rgba(0,212,255,0.45)';
+      ctx.fill();
+    });
+    pts.forEach(function(p,i){
+      for(var j=i+1;j<pts.length;j++){
+        var q=pts[j];
+        var d=Math.hypot(p.x-q.x,p.y-q.y);
+        if(d<110){
+          ctx.beginPath();
+          ctx.moveTo(p.x,p.y);
+          ctx.lineTo(q.x,q.y);
+          ctx.strokeStyle='rgba(0,212,255,'+(1-d/110)*.12+')';
+          ctx.lineWidth=.5;
+          ctx.stroke();
+        }
+      }
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ── TYPING EFFECT ──
+(function(){
+  var el = document.querySelector('h2.t') || document.querySelector('h2');
+  if(!el) return;
+  var lang = localStorage.getItem('aipda_lang') || 'en';
+  var texts = {
+    en: 'AI-Powered Detection of Phishing Attacks',
+    ar: 'الكشف بالذكاء الاصطناعي عن هجمات التصيد'
+  };
+  var full = texts[lang] || texts['en'];
+  var em = el.querySelector('em');
+  var emText = em ? em.textContent : '';
+  el.innerHTML = '<span id="_typed"></span><span id="_cur" style="display:inline-block;width:2px;height:.9em;background:#00d4ff;margin-left:2px;vertical-align:middle;animation:_blink .7s step-end infinite;"></span>';
+  var style = document.createElement('style');
+  style.textContent = '@keyframes _blink{0%,100%{opacity:1;}50%{opacity:0;}}';
+  document.head.appendChild(style);
+  var i=0;
+  function type(){
+    if(i<=full.length){
+      var t=full.slice(0,i++);
+      var out=t;
+      if(emText && t.indexOf(emText)>-1){
+        out=t.replace(emText,'<em style="font-style:normal;color:#00d4ff;">'+emText+'</em>');
+      }
+      document.getElementById('_typed').innerHTML=out;
+      setTimeout(type, i<10?120:i<full.length*.6?65:45);
+    } else {
+      var cur=document.getElementById('_cur');
+      if(cur) setTimeout(function(){cur.style.display='none';},1200);
+    }
+  }
+  setTimeout(type,400);
+})();
+
+// ── COUNTER ANIMATION ──
+(function(){
+  function countUp(el, target, delay){
+    if(!el) return;
+    setTimeout(function(){
+      var n=0, steps=50, step=target/steps;
+      var t=setInterval(function(){
+        n=Math.min(n+step,target);
+        el.textContent=Math.round(n);
+        if(n>=target)clearInterval(t);
+      },18);
+    },delay);
+  }
+  var nums=document.querySelectorAll('.stat-n');
+  nums.forEach(function(el,i){
+    var orig=el.textContent.trim();
+    if(!isNaN(orig)&&orig!==''){
+      countUp(el,parseInt(orig),600+i*200);
+    }
+  });
+})();
+</script>
+
 </body>
 </html>
