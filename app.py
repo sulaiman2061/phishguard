@@ -485,6 +485,24 @@ def analyze():
     user_id  = session.get('user_id', 0)
     username = session.get('username', 'guest')
     ip = request.remote_addr
+    # ── 1. NCA CHECK (GROUND TRUTH) ──
+    try:
+        from nca_engine import analyze_with_nca
+        nca = analyze_with_nca(user_input)
+        if nca.get('nca_result') in ['OFFICIAL','PHISHING'] or nca.get('verdict') in ['LEGITIMATE','PHISHING']:
+            result = {
+                'verdict': nca['verdict'],
+                'confidence': 'High',
+                'explanation': nca.get('explanation', ''),
+                'red_flags': nca.get('nca_flags', []),
+                'safe_signals': nca.get('safe_signals', []),
+                'method': nca.get('method', 'NCA Database')
+            }
+            save_scan(user_id,username,user_input,result['verdict'],result['confidence'],result['explanation'],result['method'],ip)
+            return jsonify(result)
+    except Exception as e:
+        print("NCA error:", e)
+
 
     if check_whitelist(user_input):
         result = {"verdict":"WHITELISTED","confidence":"High",
