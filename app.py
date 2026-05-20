@@ -523,6 +523,21 @@ def analyze():
         except Exception as e:
             print("OpenAI failed:",e)
 
+    # ── VIRUSTOTAL CHECK ──
+    if VIRUSTOTAL_API_KEY:
+        vt = check_virustotal(user_input)
+        if vt and vt.get('verdict') in ['PHISHING','SUSPICIOUS']:
+            save_scan(user_id,username,user_input,vt['verdict'],vt['confidence'],vt['explanation'],vt['method'],ip)
+            return jsonify(vt)
+
+    # ── GOOGLE SAFE BROWSING CHECK ──
+    if GOOGLE_SAFE_BROWSING_KEY:
+        gsb = check_google_safe_browsing(user_input)
+        if gsb and gsb.get('verdict') == 'PHISHING':
+            save_scan(user_id,username,user_input,gsb['verdict'],gsb['confidence'],gsb['explanation'],gsb['method'],ip)
+            return jsonify(gsb)
+
+    # ── RULE-BASED v4.0 ──
     result = check_phishing_rules(user_input)
     result['method'] = 'Rule-Based v4.0'
     save_scan(user_id,username,user_input,result['verdict'],result['confidence'],result['explanation'],result['method'],ip)
