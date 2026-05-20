@@ -1,4 +1,4 @@
-import os
+import os, json, base64
 # =====================================================
 # AIPDA - AI Powered Detection of Phishing Attacks
 # Version 4.0 - Enterprise Edition
